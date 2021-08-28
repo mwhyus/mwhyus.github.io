@@ -261,7 +261,7 @@ html{
 .tech .title::after,
 .teams .title::after{
   background: #1A1A1A;
-  content: "What Are My Experiences";
+  content: "Click box below:";
 }
 
 .tech .tech-content .card{
