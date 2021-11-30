@@ -403,7 +403,7 @@ html{
 
 /* Teams Section */
 .teams .title::after{
-  content: "Who Were With We";
+  content: "Who Were With Me";
 }
 
 .teams .carousel .card{
