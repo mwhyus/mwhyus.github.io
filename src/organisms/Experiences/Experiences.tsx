@@ -41,7 +41,7 @@ const EXPERIENCES: ExperienceItem[] = [
 ]
 
 const ExperienceCard: React.FC<{ item: ExperienceItem; index: number }> = React.memo(({ item, index }) => {
-  const { rotateX, rotateY, handleMouseMove, handleMouseLeave, cardRef } = useGlassTilt()
+  const { rotateX, rotateY, handleMouseMove, handleMouseLeave, cardRef } = useGlassTilt<HTMLAnchorElement>()
 
   return (
     <motion.div

@@ -10,20 +10,20 @@ import {
   type MotionValue,
 } from 'framer-motion'
 
-interface GlassTiltReturn {
+interface GlassTiltReturn<T extends HTMLElement = HTMLDivElement> {
   rotateX: MotionValue<number>
   rotateY: MotionValue<number>
   glowX: MotionValue<string>
   glowY: MotionValue<string>
-  handleMouseMove: (e: React.MouseEvent<HTMLDivElement>) => void
+  handleMouseMove: (e: React.MouseEvent<T>) => void
   handleMouseLeave: () => void
-  cardRef: React.RefObject<HTMLDivElement | null>
+  cardRef: React.RefObject<T | null>
 }
 
 const SPRING_CONFIG = { stiffness: 300, damping: 20 } // DESIGN.md §4
 
-export function useGlassTilt(): GlassTiltReturn {
-  const cardRef = useRef<HTMLDivElement | null>(null)
+export function useGlassTilt<T extends HTMLElement = HTMLDivElement>(): GlassTiltReturn<T> {
+  const cardRef = useRef<T | null>(null)
 
   const rawX = useMotionValue(0)
   const rawY = useMotionValue(0)
@@ -41,7 +41,7 @@ export function useGlassTilt(): GlassTiltReturn {
   const glowY = useTransform(springY, [-0.5, 0.5], ['0%', '100%'])
 
   const handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
+    (e: React.MouseEvent<T>) => {
       if (!cardRef.current) return
       const rect = cardRef.current.getBoundingClientRect()
       const x = (e.clientX - rect.left) / rect.width - 0.5

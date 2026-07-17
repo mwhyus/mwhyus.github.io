@@ -12,6 +12,7 @@ interface Teammate {
   role: string
   description: string
   photo: string
+  photoMobile?: string
   project: string
   objectPosition?: string
 }
