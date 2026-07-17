@@ -1,0 +1,55 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  border-radius: var(--glass-radius-btn);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  text-decoration: none;
+  white-space: nowrap;
+
+  // Gold CTA — DESIGN.md: Amber #DAA520
+  &.gold {
+    background: linear-gradient(135deg, #DAA520 0%, #D4AF37 50%, #B8860B 100%);
+    color: #0a0d14;
+    box-shadow: 0 4px 20px rgba(218, 165, 32, 0.4);
+    border: 1px solid rgba(218, 165, 32, 0.6);
+
+    &:hover {
+      box-shadow: 0 8px 32px rgba(218, 165, 32, 0.6);
+    }
+  }
+
+  // Glass variant — DESIGN.md Glass Protocol
+  &.glass {
+    background: var(--glass-fill);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
+    color: var(--color-text-heading);
+    box-shadow: var(--glass-shadow);
+
+    &:hover {
+      background: var(--glass-fill-hover);
+      border: var(--glass-border-hover);
+      box-shadow: var(--glass-shadow-hover);
+    }
+  }
+
+  // Outline variant
+  &.outline {
+    background: transparent;
+    border: 1px solid rgba(218, 165, 32, 0.5);
+    color: #DAA520;
+
+    &:hover {
+      background: rgba(218, 165, 32, 0.1);
+      border-color: #DAA520;
+    }
+  }
+}

@@ -1,0 +1,156 @@
+.section {
+  padding: 7rem 0;
+  position: relative;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+// ─── Category Group ──────────────────────────────────────────
+.category {
+  // Add top margin to all categories except the first
+  & + & {
+    margin-top: 3.5rem;
+  }
+}
+
+.categoryHeader {
+  margin-bottom: 1.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(218, 165, 32, 0.15);
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.categoryLabel {
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 700;
+  color: var(--color-accent-amber);
+  letter-spacing: 0.02em;
+  margin: 0;
+  white-space: nowrap;
+
+  // Decorative left bar accent
+  position: relative;
+  padding-left: 0.875rem;
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 1em;
+    background: linear-gradient(180deg, #DAA520, #D4AF37);
+    border-radius: 2px;
+  }
+}
+
+.categorySubtitle {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+// ─── Cards Grid ──────────────────────────────────────────────
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
+
+  > div {
+    flex: 1 1 150px;
+    max-width: 180px;
+    min-width: 150px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 1rem;
+    > div {
+      flex: 1 1 140px;
+      max-width: 180px;
+      min-width: 130px;
+    }
+  }
+}
+
+.cardWrapper {
+  perspective: 1000px;
+  width: 100%;
+  height: 100%;
+}
+
+.card {
+  // Glass Protocol (DESIGN.md §3)
+  background: var(--glass-fill);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  border-radius: var(--glass-radius-card);
+  box-shadow: var(--glass-shadow);
+  overflow: hidden;
+  position: relative;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+  cursor: default;
+  height: 100%;
+
+  &:hover {
+    border: var(--glass-border-hover);
+    box-shadow: var(--glass-shadow-hover);
+  }
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    rgba(218, 165, 32, 0.12) 0%,
+    transparent 70%
+  );
+  transition: background 0.1s ease;
+}
+
+.cardInner {
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.icon {
+  font-size: 2.4rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px currentColor);
+  transition: transform 0.3s ease;
+
+  .card:hover & {
+    transform: scale(1.15) translateZ(10px);
+  }
+}
+
+.name {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-heading);
+}
+
+.level {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}

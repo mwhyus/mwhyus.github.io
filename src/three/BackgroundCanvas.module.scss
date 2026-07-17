@@ -1,0 +1,16 @@
+// BackgroundCanvas.module.scss
+.canvasWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none; // Prevent scroll-jacking on all devices
+  overflow: hidden;
+
+  // On mobile: also disable touch events to prevent scroll interference
+  @media (max-width: 768px) {
+    touch-action: none;
+  }
+}

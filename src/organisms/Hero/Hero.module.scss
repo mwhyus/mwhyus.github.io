@@ -1,0 +1,240 @@
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-align: center;
+}
+
+.bgImage {
+  position: absolute;
+  inset: -100px 0 -100px 0; /* Extra height for parallax */
+  background-image: url('/assets/hero-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.bgOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 13, 20, 0.4) 0%,
+    rgba(10, 13, 20, 0.6) 50%,
+    rgba(10, 13, 20, 0.95) 100%
+  );
+  z-index: 1;
+}
+
+/* ========================================= */
+/* Parallax Tree Layers & Swaying Animations */
+/* ========================================= */
+
+@keyframes sway {
+  0% { transform: rotate(-3deg); }
+  50% { transform: rotate(4deg); }
+  100% { transform: rotate(-3deg); }
+}
+
+.layerBg, .layerFg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.layerBg {
+  z-index: 2;
+  opacity: 0.6;
+  filter: brightness(0.6) blur(2px);
+}
+
+.layerFg {
+  z-index: 4;
+  opacity: 0.85;
+  filter: blur(4px); /* Foreground blur for depth of field */
+}
+
+.tree {
+  position: absolute;
+  bottom: -10%;
+  transform-origin: bottom center;
+  color: #1a2a1b; /* Dark tropical green */
+  animation: sway 8s ease-in-out infinite;
+}
+
+/* Background Trees */
+.treeBgLeft {
+  left: 5%;
+  width: 40vw;
+  max-width: 400px;
+  animation-duration: 9s;
+  animation-delay: -2s;
+}
+.treeBgRight {
+  right: 5%;
+  width: 35vw;
+  max-width: 350px;
+  transform: scaleX(-1); /* Flip horizontally */
+  animation-duration: 11s;
+  animation-direction: reverse;
+}
+
+/* Foreground Overlay Trees */
+.treeFgLeft {
+  left: -15%;
+  width: 70vw;
+  max-width: 700px;
+  bottom: -20%;
+  animation-duration: 7s;
+}
+.treeFgRight {
+  right: -10%;
+  width: 60vw;
+  max-width: 600px;
+  bottom: -15%;
+  transform: scaleX(-1);
+  animation-duration: 8.5s;
+  animation-delay: -4s;
+}
+
+
+/* ========================================= */
+/* Centered Main Content                     */
+/* ========================================= */
+
+.container {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  padding: 0 2rem;
+  padding-top: calc(var(--nav-height) + 2rem);
+  display: flex;
+  justify-content: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px;
+}
+
+.profileFrame {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  border: var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255,255,255,0.1);
+  background: var(--glass-fill);
+}
+
+.profilePic {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+}
+
+.profileOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(218, 165, 32, 0.1), transparent);
+  pointer-events: none;
+}
+
+.greeting {
+  font-size: 1.1rem;
+  color: var(--color-accent-amber);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.name {
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 700;
+  color: var(--color-text-heading);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+
+.nameAccent {
+  color: var(--color-accent-amber);
+  background: linear-gradient(135deg, #DAA520, #D4AF37);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.roleWrapper {
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  color: var(--color-text-body);
+  margin-bottom: 2.5rem;
+  min-height: 2em;
+}
+
+.rolePrefix {
+  color: var(--color-text-body);
+}
+
+.role {
+  color: var(--color-text-heading);
+  font-weight: 600;
+}
+
+.cursor {
+  display: inline-block;
+  color: var(--color-accent-amber);
+  animation: blink 1s step-end infinite;
+  margin-left: 1px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.scrollHintWrapper {
+  position: absolute;
+  bottom: 2rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 3;
+}
+
+.scrollHint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 768px) {
+  .profileFrame {
+    width: 140px;
+    height: 140px;
+  }
+}

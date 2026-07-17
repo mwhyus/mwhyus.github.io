@@ -1,0 +1,42 @@
+// GlassCard.module.scss — Strict Glass Protocol (DESIGN.md §3)
+// All values via CSS custom properties (SKILL.md §2.3b — no hardcoding)
+.card {
+  background: var(--glass-fill);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: var(--glass-border);
+  border-radius: var(--glass-radius-card);
+  box-shadow: var(--glass-shadow);
+  padding: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: default;
+  overflow: hidden;
+  position: relative;
+
+  // Inner glow for depth
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0) 60%
+    );
+    pointer-events: none;
+  }
+
+  &:hover {
+    border: var(--glass-border-hover);
+    box-shadow: var(--glass-shadow-hover);
+
+    &::before {
+      background: linear-gradient(
+        135deg,
+        rgba(218, 165, 32, 0.08) 0%,
+        rgba(255, 255, 255, 0) 60%
+      );
+    }
+  }
+}

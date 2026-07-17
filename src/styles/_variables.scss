@@ -1,0 +1,50 @@
+// ============================================================
+// _variables.scss — Golden Hour Ambiance Design Tokens
+// Source of Truth: .agents/design/DESIGN.md
+// ============================================================
+
+// --- Color Palette ---
+$color-bg-deep:        #0a0d14;        // Primary deep dark background
+$color-bg-section:     #0d1120;        // Alternate section background
+$color-accent-amber:   #DAA520;        // Primary CTA / highlights
+$color-accent-gold:    #D4AF37;        // Secondary gold accent
+$color-text-heading:   #FDF6E3;        // Off-white headings
+$color-text-body:      rgba(255, 255, 255, 0.65); // Muted body text
+$color-text-muted:     rgba(255, 255, 255, 0.4);  // Extra muted
+
+// --- Glass Protocol (DESIGN.md §3 — Strict Enforcement) ---
+$glass-fill:           rgba(255, 255, 255, 0.08);
+$glass-fill-hover:     rgba(255, 255, 255, 0.12);
+$glass-blur:           20px;
+$glass-border:         1px solid rgba(255, 255, 255, 0.15);
+$glass-border-hover:   1px solid rgba(218, 165, 32, 0.35);
+$glass-shadow:         0 8px 32px 0 rgba(31, 38, 135, 0.2);
+$glass-shadow-hover:   0 16px 48px 0 rgba(218, 165, 32, 0.15);
+$glass-radius-card:    16px;
+$glass-radius-btn:     8px;
+
+// --- Typography (DESIGN.md §2) ---
+$font-heading:         'DM Sans', sans-serif;
+$font-body:            'Lato', sans-serif;
+
+// --- Spacing ---
+$spacing-xs:    0.5rem;
+$spacing-sm:    1rem;
+$spacing-md:    2rem;
+$spacing-lg:    4rem;
+$spacing-xl:    6rem;
+
+// --- Layout ---
+$max-width:        1200px;
+$nav-height:       70px;
+
+// --- Animation (DESIGN.md §4) ---
+$spring-stiffness: 300;
+$spring-damping:   20;
+$transition-base:  all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+
+// --- Breakpoints ---
+$bp-mobile:     480px;
+$bp-tablet:     768px;
+$bp-desktop:    1024px;
+$bp-wide:       1440px;

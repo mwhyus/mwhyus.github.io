@@ -1,0 +1,19 @@
+{
+  "name": "mwhyus-portfolio",
+  "version": "2.0.0",
+  "description": "Muhammad Wahyu Santoso — Premium Portfolio with Golden Hour Glassmorphism",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mwhyus/mwhyus.github.io.git"
+  },
+  "author": "Muhammad Wahyu Santoso",
+  "license": "MIT"
+}

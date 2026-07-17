@@ -1,0 +1,112 @@
+// ============================================================
+// _globals.scss — Base Reset + Typography + Scrollbar
+// ============================================================
+@use 'variables' as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  // CSS Custom Properties — mapped from SCSS tokens for use in CSS Modules
+  --color-accent-amber: #{$color-accent-amber};
+  --color-accent-gold:  #{$color-accent-gold};
+  --color-text-heading: #{$color-text-heading};
+  --color-text-body:    #{$color-text-body};
+  --color-text-muted:   #{$color-text-muted};
+  --color-bg-deep:      #{$color-bg-deep};
+  --color-bg-section:   #{$color-bg-section};
+
+  --glass-fill:         #{$glass-fill};
+  --glass-fill-hover:   #{$glass-fill-hover};
+  --glass-blur:         #{$glass-blur};
+  --glass-border:       #{$glass-border};
+  --glass-border-hover: #{$glass-border-hover};
+  --glass-shadow:       #{$glass-shadow};
+  --glass-shadow-hover: #{$glass-shadow-hover};
+  --glass-radius-card:  #{$glass-radius-card};
+  --glass-radius-btn:   #{$glass-radius-btn};
+
+  --font-heading: #{$font-heading};
+  --font-body:    #{$font-body};
+  --nav-height:   #{$nav-height};
+  --max-width:    #{$max-width};
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: $font-body;
+  background-color: $color-bg-deep;
+  color: $color-text-body;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-heading;
+  color: $color-text-heading;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: $font-body;
+}
+
+// Custom scrollbar
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: $color-bg-deep;
+}
+::-webkit-scrollbar-thumb {
+  background: $color-accent-amber;
+  border-radius: 3px;
+}
+
+// Selection color
+::selection {
+  background: rgba($color-accent-amber, 0.3);
+  color: $color-text-heading;
+}
+
+// Canvas R3F fix
+canvas {
+  display: block;
+}
+
+// Layout helper
+.container {
+  max-width: $max-width;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+}
