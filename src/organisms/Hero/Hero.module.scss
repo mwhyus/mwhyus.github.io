@@ -136,8 +136,8 @@
 // ─── Profile Frame (organic CSS mask) ────────────────────────
 .profileFrame {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 254px; // Increased by another 10%
+  height: 254px;
   margin-bottom: 2rem;
   display: flex;
   align-items: center;
@@ -150,7 +150,6 @@
   pointer-events: none;
 }
 
-// Orbital particles rotating around the photo
 .orbParticle {
   --idx: 0;
   --total: 12;
@@ -163,7 +162,7 @@
   background: radial-gradient(circle, #DAA520, #FFE074);
   opacity: 0.7;
   transform:
-    rotate(calc(360deg / var(--total) * var(--idx))) translateX(108px) translateY(-50%);
+    rotate(calc(360deg / var(--total) * var(--idx))) translateX(136px) translateY(-50%); // Adjusted translate to match larger size
   animation: orbit calc(6s + var(--idx) * 0.4s) linear infinite;
   animation-delay: calc(var(--idx) * -0.5s);
   box-shadow: 0 0 6px 2px rgba(218, 165, 32, 0.4);
@@ -171,19 +170,19 @@
 
 @keyframes orbit {
   from {
-    transform: rotate(calc(360deg / var(--total) * var(--idx))) translateX(108px) translateY(-50%);
+    transform: rotate(calc(360deg / var(--total) * var(--idx))) translateX(136px) translateY(-50%);
   }
 
   to {
-    transform: rotate(calc(360deg / var(--total) * var(--idx) + 360deg)) translateX(108px) translateY(-50%);
+    transform: rotate(calc(360deg / var(--total) * var(--idx) + 360deg)) translateX(136px) translateY(-50%);
   }
 }
 
 // ─── Image with Organic Mask ──────────────────────────────────
 .imageWrapper {
   position: relative;
-  width: 176px;
-  height: 176px;
+  width: 222px; // Increased by another 10%
+  height: 222px;
   overflow: hidden;
   border-radius: 50%; // circular base — mask creates organic edge
   // Organic SVG-based CSS mask (blob shape)
@@ -374,43 +373,59 @@
 // ─── Mobile ──────────────────────────────────────────────────
 @media (max-width: 768px) {
   .profileFrame {
-    width: 150px;
-    height: 150px;
+    width: 190px;
+    height: 190px;
     margin-bottom: 1.5rem;
   }
 
   .imageWrapper {
-    width: 130px;
-    height: 130px;
+    width: 166px;
+    height: 166px;
   }
 
   .orbParticle {
-    transform: rotate(calc(360deg / var(--total) * var(--idx))) translateX(76px) translateY(-50%);
+    transform: rotate(calc(360deg / var(--total) * var(--idx))) translateX(104px) translateY(-50%);
   }
 
   // Scale down trees on mobile to reduce visual noise
-  .treeBgLeft  { width: 30vw; bottom: -5%; }
-  .treeBgRight { width: 25vw; bottom: -5%; }
-  .treeFgLeft  { width: 50vw; bottom: -10%; }
-  .treeFgRight { width: 45vw; bottom: -10%; }
+  .treeBgLeft {
+    width: 30vw;
+    bottom: -5%;
+  }
+
+  .treeBgRight {
+    width: 25vw;
+    bottom: -5%;
+  }
+
+  .treeFgLeft {
+    width: 50vw;
+    bottom: -10%;
+  }
+
+  .treeFgRight {
+    width: 45vw;
+    bottom: -10%;
+  }
 }
 
 @media (max-width: 480px) {
   .profileFrame {
-    width: 130px;
-    height: 130px;
+    width: 166px; // Increased by another 10%
+    height: 166px;
   }
 
   .imageWrapper {
-    width: 110px;
-    height: 110px;
+    width: 138px; // Increased by another 10%
+    height: 138px;
   }
 
   .orbParticle {
-    transform: rotate(calc(360deg / var(--total) * var(--idx))) translateX(64px) translateY(-50%);
+    transform: rotate(calc(360deg / var(--total) * var(--idx))) translateX(92px) translateY(-50%); // Adjusted translate
   }
-  
-  .treeFgLeft, .treeFgRight {
+
+  .treeFgLeft,
+  .treeFgRight {
     display: none; // Hide foreground trees on tiny viewports to keep text clear
   }
 }

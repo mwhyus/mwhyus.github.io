@@ -56,6 +56,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
   width: 100%;
+  align-items: stretch; // Ensure equal height cards
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -64,6 +65,7 @@
 
 .cardWrapper {
   perspective: 1000px;
+  height: 100%;
 }
 
 .card {
@@ -72,6 +74,8 @@
   cursor:     default;
   position:   relative;
   height:     100%;
+  display:    flex;
+  flex-direction: column; // Allow vertical stretching
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
@@ -128,6 +132,9 @@
 
 .info {
   padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1; // Stretch info block to match card height
 }
 
 .project {
@@ -200,6 +207,7 @@
 
   @media (max-width: 768px) {
     display: flex;
+    align-items: stretch; // Force all scroll items to stretch to the tallest card's height
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     gap: 1rem;
