@@ -7,21 +7,28 @@
 @use '../../styles/mixins' as *;
 
 .nav {
-  position:   fixed;
-  top:        0;
-  left:       0;
-  right:      0;
-  z-index:    var(--z-nav);
-  padding:    1rem 0;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  position:      fixed;
+  top:           0;
+  left:          0;
+  right:         0;
+  z-index:       var(--z-nav);
+  padding:       1.5rem 0; // Large, airy header at the top
+  background:    transparent;
+  border-bottom: 1px solid transparent;
+  will-change:   transform, opacity, padding, background, backdrop-filter; // GPU acceleration
+  transition:    padding 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                 background 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                 backdrop-filter 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                 border-color 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 
   &.scrolled {
-    background:          var(--glass-fill);
-    backdrop-filter:     blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-bottom:       var(--glass-border);
-    box-shadow:          var(--glass-shadow);
-    padding:             0.5rem 0;
+    @include glass-card(false); // Design System Compliance
+    border-radius: 0; // Keep edge-to-edge layout
+    border-top:    none;
+    border-left:   none;
+    border-right:  none;
+    border-bottom: var(--glass-border);
+    padding:       0.6rem 0; // Smooth shrink animation
   }
 }
 
@@ -45,6 +52,12 @@
   flex-shrink:     0;
 
   .dot { color: var(--color-accent-amber); }
+
+  @media (max-width: 768px) {
+    padding: 0.5rem 0; // Expand touch target height on mobile
+    display: inline-flex;
+    align-items: center;
+  }
 }
 
 // ─── Desktop Links ────────────────────────────────────────────
@@ -109,6 +122,9 @@
     display:         flex;
     align-items:     center;
     justify-content: center;
+    min-width:       44px; // Apple/Android standard touch target size (A15 compatible)
+    min-height:      44px;
+    padding:         0;
   }
 }
 

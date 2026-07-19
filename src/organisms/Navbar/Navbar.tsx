@@ -4,7 +4,7 @@
 // Updated: Pill sliding bg, blur intensity, staggered mobile links
 // ============================================================
 import React, { useState, useEffect, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion'
 import { RiMenuLine, RiCloseLine } from 'react-icons/ri'
 import { entranceTransition, interactionTransition } from '../../hooks/motionVariants'
 import styles from './Navbar.module.scss'
@@ -24,12 +24,12 @@ export const Navbar: React.FC = React.memo(() => {
   const [mobileOpen, setMobileOpen]   = useState(false)
   const [activeSection, setActiveSection] = useState('home')
 
-  // Scroll detection for blur intensification
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 60)
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  const { scrollY } = useScroll()
+
+  // Track scroll position to shrink and apply glassmorphism when scrolled past Hero
+  useMotionValueEvent(scrollY, 'change', (latest) => {
+    setScrolled(latest > 60)
+  })
 
   // Active section via IntersectionObserver
   useEffect(() => {
