@@ -1,8 +1,3 @@
-// ============================================================
-// Navbar.tsx — Organism: Glassmorphic sticky navigation
-// DESIGN.md §3: layoutId pill indicator, spring physics
-// Updated: Pill sliding bg, blur intensity, staggered mobile links
-// ============================================================
 import React, { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion'
 import { RiMenuLine, RiCloseLine } from 'react-icons/ri'
@@ -26,12 +21,10 @@ export const Navbar: React.FC = React.memo(() => {
 
   const { scrollY } = useScroll()
 
-  // Track scroll position to shrink and apply glassmorphism when scrolled past Hero
   useMotionValueEvent(scrollY, 'change', (latest) => {
     setScrolled(latest > 60)
   })
 
-  // Active section via IntersectionObserver
   useEffect(() => {
     const sections = NAV_LINKS.map(l => l.href.slice(1))
     const observer = new IntersectionObserver(
@@ -66,7 +59,7 @@ export const Navbar: React.FC = React.memo(() => {
       aria-label="Main navigation"
     >
       <div className={styles.inner}>
-        {/* Logo */}
+        {}
         <a
           href="#home"
           className={styles.logo}
@@ -76,7 +69,7 @@ export const Navbar: React.FC = React.memo(() => {
           mwhyus<span className={styles.dot}>.</span>
         </a>
 
-        {/* Desktop links — pill slides between items via layoutId */}
+        {}
         <ul className={styles.links} role="list">
           {NAV_LINKS.map(({ label, href }) => {
             const isActive = activeSection === href.slice(1)
@@ -87,7 +80,7 @@ export const Navbar: React.FC = React.memo(() => {
                   className={`${styles.link} ${isActive ? styles.active : ''}`}
                   onClick={e => { e.preventDefault(); handleNavClick(href) }}
                 >
-                  {/* Sliding pill background */}
+                  {}
                   {isActive && (
                     <motion.span
                       layoutId="navPill"
@@ -102,7 +95,7 @@ export const Navbar: React.FC = React.memo(() => {
           })}
         </ul>
 
-        {/* Mobile hamburger */}
+        {}
         <button
           className={styles.hamburger}
           onClick={() => setMobileOpen(o => !o)}
@@ -113,7 +106,7 @@ export const Navbar: React.FC = React.memo(() => {
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div

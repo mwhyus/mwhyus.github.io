@@ -1,8 +1,3 @@
-// ============================================================
-// useGlassTilt.ts — 3D Tilt Hook (SKILL.md §3.2 — Logic Separation)
-// DESIGN.md §3: interaction spring { stiffness: 400, damping: 25 }
-// Updated: reduced-motion guard, correct spring config
-// ============================================================
 import { useRef, useCallback } from 'react'
 import {
   useMotionValue,
@@ -22,7 +17,6 @@ interface GlassTiltReturn<T extends HTMLElement = HTMLDivElement> {
   cardRef:          React.RefObject<T | null>
 }
 
-// DESIGN.md §3: interaction preset — stiffness 400, damping 25
 const SPRING_CONFIG = { stiffness: 400, damping: 25 }
 
 export function useGlassTilt<T extends HTMLElement = HTMLDivElement>(): GlassTiltReturn<T> {
@@ -32,16 +26,13 @@ export function useGlassTilt<T extends HTMLElement = HTMLDivElement>(): GlassTil
   const rawX = useMotionValue(0)
   const rawY = useMotionValue(0)
 
-  // Spring physics for "weighted" feel
   const springX = useSpring(rawX, SPRING_CONFIG)
   const springY = useSpring(rawY, SPRING_CONFIG)
 
-  // Map mouse offset → rotation degrees (zeroed if reduced-motion)
   const maxDeg  = shouldReduce ? 0 : 12
   const rotateX = useTransform(springY, [-0.5, 0.5], [maxDeg, -maxDeg])
   const rotateY = useTransform(springX, [-0.5, 0.5], [-maxDeg, maxDeg])
 
-  // Glow highlight position (follows mouse)
   const glowX = useTransform(springX, [-0.5, 0.5], ['0%', '100%'])
   const glowY = useTransform(springY, [-0.5, 0.5], ['0%', '100%'])
 

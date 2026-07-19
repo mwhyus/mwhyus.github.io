@@ -1,6 +1,3 @@
-// ============================================================
-// Footer.tsx — Organism: Minimal amber-accented footer
-// ============================================================
 import React from 'react'
 import { motion } from 'framer-motion'
 import { RiLinkedinBoxLine, RiGithubLine, RiGitlabLine } from 'react-icons/ri'

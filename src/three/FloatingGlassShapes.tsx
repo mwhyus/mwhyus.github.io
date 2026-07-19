@@ -1,14 +1,8 @@
-// ============================================================
-// FloatingGlassShapes.tsx — Apple-style 3D floating glass objects
-// DESIGN.md §4: MeshPhysicalMaterial, PerformanceMonitor, mobile simplification
-// Updated: Ambient particles, scroll-reactive geometry, depth layers
-// ============================================================
 import React, { useRef, useMemo } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { Float, useScroll } from '@react-three/drei'
 import * as THREE from 'three'
 
-// ─── Types ────────────────────────────────────────────────────
 interface ShapeProps {
   position:       [number, number, number]
   scale?:         number
@@ -21,7 +15,6 @@ interface ShapeProps {
   shape?:         'sphere' | 'torus' | 'dodecahedron' | 'icosahedron' | 'octahedron'
 }
 
-// ─── Individual Glass Shape ────────────────────────────────────
 const GlassShape: React.FC<ShapeProps> = React.memo(({
   position,
   scale         = 1,
@@ -40,7 +33,7 @@ const GlassShape: React.FC<ShapeProps> = React.memo(({
     if (!meshRef.current) return
     meshRef.current.rotation.x += delta * rotationSpeed * 0.3
     meshRef.current.rotation.y += delta * rotationSpeed
-    // Subtle scroll-reactive drift
+
     if (scroll) {
       meshRef.current.position.y = position[1] + scroll.offset * -0.8
     }
@@ -84,7 +77,6 @@ const GlassShape: React.FC<ShapeProps> = React.memo(({
 
 GlassShape.displayName = 'GlassShape'
 
-// ─── Ambient Particle Field ────────────────────────────────────
 interface ParticleFieldProps {
   count: number
 }
@@ -92,7 +84,6 @@ interface ParticleFieldProps {
 const ParticleField: React.FC<ParticleFieldProps> = React.memo(({ count }) => {
   const meshRef = useRef<THREE.Points>(null)
 
-  // Generate random positions for particles
   const [positions, colors] = useMemo(() => {
     const pos = new Float32Array(count * 3)
     const col = new Float32Array(count * 3)
@@ -139,7 +130,6 @@ const ParticleField: React.FC<ParticleFieldProps> = React.memo(({ count }) => {
 
 ParticleField.displayName = 'ParticleField'
 
-// ─── Main Component ───────────────────────────────────────────
 interface FloatingGlassShapesProps {
   isMobile: boolean
 }
@@ -149,22 +139,20 @@ export const FloatingGlassShapes: React.FC<FloatingGlassShapesProps> = ({ isMobi
   const vw = viewport.width
   const vh = viewport.height
 
-  // Desktop shapes — rich scene with depth layers
   const desktopShapes: ShapeProps[] = [
-    // Front layer (z: -2 to -4)
+
     { position: [vw * 0.36, vh * 0.12, -2.5],  scale: 1.4,  shape: 'sphere',       color: '#DAA520', transmission: 0.9,  floatIntensity: 1.2, rotationSpeed: 0.2 },
     { position: [-vw * 0.34, -vh * 0.08, -3.5], scale: 1.1,  shape: 'torus',        color: '#D4AF37', transmission: 0.8,  floatIntensity: 0.8, rotationSpeed: 0.3 },
-    // Mid layer (z: -5 to -6)
+
     { position: [vw * 0.1,  -vh * 0.3,  -5],    scale: 0.8,  shape: 'dodecahedron', color: '#B8860B', transmission: 0.7,  floatIntensity: 1.0, rotationSpeed: 0.15 },
     { position: [-vw * 0.2,  vh * 0.32, -5.5],  scale: 1.6,  shape: 'icosahedron',  color: '#C9A227', transmission: 0.85, floatIntensity: 0.6, rotationSpeed: 0.25 },
     { position: [vw * 0.46, -vh * 0.42, -4.5],  scale: 0.6,  shape: 'octahedron',   color: '#E8C96A', transmission: 0.75, floatIntensity: 1.4, rotationSpeed: 0.4  },
-    // Background bokeh layer (z: -7 to -9)
+
     { position: [-vw * 0.44,  vh * 0.18, -7],   scale: 2.2,  shape: 'sphere',       color: '#8B6914', transmission: 0.55, floatIntensity: 0.4, rotationSpeed: 0.08 },
     { position: [vw * 0.2,   -vh * 0.1,  -8],   scale: 1.8,  shape: 'icosahedron',  color: '#C9A227', transmission: 0.5,  floatIntensity: 0.3, rotationSpeed: 0.06 },
     { position: [-vw * 0.1,   vh * 0.4,  -9],   scale: 1.4,  shape: 'dodecahedron', color: '#DAA520', transmission: 0.45, floatIntensity: 0.2, rotationSpeed: 0.05 },
   ]
 
-  // Mobile shapes — simplified for performance (DESIGN.md §4)
   const mobileShapes: ShapeProps[] = [
     { position: [vw * 0.3,   vh * 0.12,  -3],  scale: 0.8, shape: 'sphere', color: '#DAA520', transmission: 0.9, floatIntensity: 1.0, rotationSpeed: 0.2 },
     { position: [-vw * 0.3, -vh * 0.12,  -4],  scale: 0.6, shape: 'torus',  color: '#D4AF37', transmission: 0.8, floatIntensity: 0.8, rotationSpeed: 0.3 },

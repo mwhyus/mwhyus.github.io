@@ -1,7 +1,3 @@
-// ============================================================
-// Teammates.tsx — Organism: Previous Teammates carousel
-// DESIGN.md §3: Glass/Tilt/Stagger — consistent with Projects design language
-// ============================================================
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri'
@@ -128,7 +124,7 @@ const TeammateCard: React.FC<{ tm: Teammate; isMobile?: boolean; index?: number 
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
-        {/* Glow highlight */}
+        {}
         <motion.div
           className={styles.glow}
           style={{ '--glow-x': glowX, '--glow-y': glowY } as React.CSSProperties}
@@ -195,7 +191,7 @@ export const Teammates: React.FC = React.memo(() => {
           Previous Teammates
         </SectionTitle>
 
-        {/* Desktop Layout: Button-based Carousel */}
+        {}
         <div className={styles.desktopCarousel}>
           <div className={styles.carouselWrapper}>
             <button
@@ -249,7 +245,7 @@ export const Teammates: React.FC = React.memo(() => {
           </div>
         </div>
 
-        {/* Mobile Layout: Native Horizontal Scroll List */}
+        {}
         <div className={styles.mobileScrollList} aria-label="Mobile teammates list">
           {TEAMMATES.map((tm) => (
             <TeammateCard key={tm.name} tm={tm} isMobile />

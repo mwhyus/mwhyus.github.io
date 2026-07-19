@@ -1,8 +1,3 @@
-// ============================================================
-// Hero.tsx — Organism: Cinematic Hero Section
-// DESIGN.md: CSS mask organic shape, amber overlay, spring entrance
-// User feedback: R3F particles behind mask, mix-blend-mode overlay
-// ============================================================
 import React, { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Button } from '../../atoms/Button'
@@ -23,7 +18,6 @@ const TYPED_ROLES = [
   'Tech Explorer',
 ]
 
-// ─── Sparkle accents (pure CSS, no external dep) ─────────────
 const Sparkles: React.FC = React.memo(() => (
   <div className={styles.sparkles} aria-hidden="true">
     {Array.from({ length: 6 }).map((_, i) => (
@@ -33,22 +27,25 @@ const Sparkles: React.FC = React.memo(() => (
 ))
 Sparkles.displayName = 'Sparkles'
 
-// ─── Main Hero ────────────────────────────────────────────────
 export const Hero: React.FC = React.memo(() => {
   const [roleIndex, setRoleIndex] = React.useState(0)
   const [displayed, setDisplayed] = React.useState('')
-  const [typing, setTyping]       = React.useState(true)
+  const [typing, setTyping] = React.useState(true)
   const shouldReduce = useReducedMotion()
-  const sectionRef   = useRef<HTMLElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
 
-  // Parallax scroll setup
   const { scrollY } = useScroll()
-  const yBg       = useTransform(scrollY, [0, 1000], [0, shouldReduce ? 0 : 150])
-  const yMid      = useTransform(scrollY, [0, 1000], [0, shouldReduce ? 0 : 50])
-  const yFg       = useTransform(scrollY, [0, 1000], [0, shouldReduce ? 0 : -100])
+  const yBg = useTransform(scrollY, [0, 1000], [0, shouldReduce ? 0 : 150])
+  const yMid = useTransform(scrollY, [0, 1000], [0, shouldReduce ? 0 : 50])
+  const yFg = useTransform(scrollY, [0, 1000], [0, shouldReduce ? 0 : -100])
   const opacityFade = useTransform(scrollY, [0, 400], [1, 0])
 
-  // Typing animation
+  const scaleProfile = useTransform(scrollY, [0, 500], [1, shouldReduce ? 1 : 1.22])
+  const rotateProfile = useTransform(scrollY, [0, 500], [0, shouldReduce ? 0 : 6])
+
+  const opacityBg = useTransform(scrollY, [0, 500], [0.55, 0])
+  const opacityFg = useTransform(scrollY, [0, 400], [0.85, 0])
+
   React.useEffect(() => {
     const role = TYPED_ROLES[roleIndex]
     let timeout: ReturnType<typeof setTimeout>
@@ -80,51 +77,50 @@ export const Hero: React.FC = React.memo(() => {
       className={styles.hero}
       aria-label="Hero section"
     >
-      {/* Background Image Layer */}
       <motion.div className={styles.bgImage} style={{ y: yBg }} aria-hidden="true" />
       <div className={styles.bgOverlay} aria-hidden="true" />
 
-      {/* Layer 1: Background Trees */}
-      <motion.div className={styles.layerBg} style={{ y: yBg }} aria-hidden="true">
+      <motion.div className={styles.layerBg} style={{ y: yBg, opacity: opacityBg }} aria-hidden="true">
         <CoconutTree className={`${styles.tree} ${styles.treeBgLeft}`} />
         <CoconutTree className={`${styles.tree} ${styles.treeBgRight}`} />
       </motion.div>
 
-      {/* Layer 2: Main Content */}
       <motion.div className={styles.container} style={{ y: yMid, opacity: opacityFade }}>
         <div className={styles.content}>
-
-          {/* ── Profile Frame with CSS organic mask ── */}
           <motion.div
-            className={styles.profileFrame}
-            initial={{ scale: shouldReduce ? 1 : 0.75, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ ...entranceTransition, delay: 0.1 }}
+            style={{
+              scale: scaleProfile,
+              rotate: rotateProfile,
+              transformStyle: 'preserve-3d',
+            }}
           >
-            {/* Particle ring behind the image */}
-            <div className={styles.particleRing} aria-hidden="true">
-              {Array.from({ length: 12 }).map((_, i) => (
-                <span
-                  key={i}
-                  className={styles.orbParticle}
-                  style={{ '--idx': i, '--total': 12 } as React.CSSProperties}
-                />
-              ))}
-            </div>
+            <motion.div
+              className={styles.profileFrame}
+              initial={{ scale: shouldReduce ? 1 : 0.75, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ ...entranceTransition, delay: 0.1 }}
+            >
+              <div className={styles.particleRing} aria-hidden="true">
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <span
+                    key={i}
+                    className={styles.orbParticle}
+                    style={{ '--idx': i, '--total': 12 } as React.CSSProperties}
+                  />
+                ))}
+              </div>
 
-            {/* Image with organic mask + amber overlay */}
-            <div className={styles.imageWrapper}>
-              <img
-                src="/pic/wahyu2.jpeg"
-                alt="Muhammad Wahyu Santoso"
-                className={styles.profilePic}
-              />
-              {/* Amber mix-blend-mode tint — Golden Hour color grade */}
-              <div className={styles.amberOverlay} aria-hidden="true" />
-            </div>
+              <div className={styles.imageWrapper}>
+                <img
+                  src="/pic/wahyu2.jpeg"
+                  alt="Muhammad Wahyu Santoso"
+                  className={styles.profilePic}
+                />
+                <div className={styles.amberOverlay} aria-hidden="true" />
+              </div>
+            </motion.div>
           </motion.div>
 
-          {/* ── Greeting ── */}
           <motion.p
             className={styles.greeting}
             initial={{ y: shouldReduce ? 0 : 16, opacity: 0 }}
@@ -134,7 +130,6 @@ export const Hero: React.FC = React.memo(() => {
             Hello, I'm
           </motion.p>
 
-          {/* ── Name — word-by-word cinematic reveal ── */}
           <motion.h1
             className={styles.name}
             initial="hidden"
@@ -156,7 +151,6 @@ export const Hero: React.FC = React.memo(() => {
             <Sparkles />
           </motion.h1>
 
-          {/* ── Role Typewriter ── */}
           <motion.div
             className={styles.roleWrapper}
             initial={{ y: shouldReduce ? 0 : 16, opacity: 0 }}
@@ -170,7 +164,6 @@ export const Hero: React.FC = React.memo(() => {
             </span>
           </motion.div>
 
-          {/* ── CTAs ── */}
           <motion.div
             className={styles.ctas}
             variants={fadeInUp}
@@ -188,13 +181,11 @@ export const Hero: React.FC = React.memo(() => {
         </div>
       </motion.div>
 
-      {/* Layer 3: Foreground Trees */}
-      <motion.div className={styles.layerFg} style={{ y: yFg }} aria-hidden="true">
+      <motion.div className={styles.layerFg} style={{ y: yFg, opacity: opacityFg }} aria-hidden="true">
         <CoconutTree className={`${styles.tree} ${styles.treeFgLeft}`} />
         <CoconutTree className={`${styles.tree} ${styles.treeFgRight}`} />
       </motion.div>
 
-      {/* ── Apple-style Scroll Indicator ── */}
       <motion.div
         className={styles.scrollHintWrapper}
         style={{ opacity: opacityFade }}

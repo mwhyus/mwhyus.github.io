@@ -1,9 +1,3 @@
-// ============================================================
-// Button.tsx — Atom: Gold CTA & Glass variants
-// DESIGN.md: Amber #DAA520 CTA, border-radius 8px
-// SKILL.md §1: Atom — single responsibility, extendable via props
-// Updated: interactionTransition from motionVariants §3
-// ============================================================
 import React from 'react'
 import { motion } from 'framer-motion'
 import { interactionTransition } from '../../hooks/motionVariants'

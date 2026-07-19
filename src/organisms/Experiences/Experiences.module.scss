@@ -1,8 +1,3 @@
-// ============================================================
-// Experiences.module.scss — Vertical Timeline Layout
-// DESIGN.md §2: glass-card mixin, amber connector line
-// Updated: Timeline layout, animated line, alternating cards
-// ============================================================
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
@@ -20,7 +15,6 @@
   @include container;
 }
 
-// ─── Timeline Container ───────────────────────────────────────
 .timeline {
   position: relative;
   display:  flex;
@@ -29,7 +23,6 @@
   padding:  0 0 2rem;
 }
 
-// ─── Animated Connector Line ──────────────────────────────────
 .connectorLine {
   position:         absolute;
   left:             50%;
@@ -52,20 +45,17 @@
   }
 }
 
-// ─── Card Wrapper (alternating left/right) ────────────────────
 .cardWrapper {
   perspective: 1000px;
   position:    relative;
   width:       calc(50% - 2rem);
   display:     flex;
 
-  // Left cards sit on the left side
   &.left {
     align-self: flex-start;
     margin-right: auto;
   }
 
-  // Right cards sit on the right side
   &.right {
     align-self: flex-end;
     margin-left: auto;
@@ -79,7 +69,6 @@
   }
 }
 
-// ─── Timeline Dot ─────────────────────────────────────────────
 .dot {
   position:  absolute;
   top:       1.75rem;
@@ -88,7 +77,6 @@
   align-items: center;
   justify-content: center;
 
-  // Dot positioning: right edge of left cards, left edge of right cards
   .left  & { right: -2.5rem; }
   .right & { left:  -2.5rem; }
 
@@ -107,7 +95,6 @@
                  0 0 12px rgba(218, 165, 32, 0.4);
 }
 
-// ─── Card ─────────────────────────────────────────────────────
 .card {
   @include glass-card(false);
   display:         flex;
@@ -129,7 +116,6 @@
   &:focus-visible { @include focus-ring; }
 }
 
-// ─── Glow Highlight ───────────────────────────────────────────
 .glow {
   position:       absolute;
   inset:          0;
@@ -146,7 +132,6 @@
   .card:hover & { opacity: 1; }
 }
 
-// ─── Card Inner ───────────────────────────────────────────────
 .cardInner {
   padding:        1.75rem;
   display:        flex;

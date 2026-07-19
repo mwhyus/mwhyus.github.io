@@ -190,10 +190,6 @@
   }
 }
 
-/* ========================================================= */
-/* Responsive Layout Switch for Mobile Native Scroll         */
-/* ========================================================= */
-
 .desktopCarousel {
   display: block;
 
@@ -214,11 +210,11 @@
     padding-bottom: 2rem;
     margin-top: 1rem;
     
-    /* Hide scrollbar for a cleaner premium look */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
+    
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
     &::-webkit-scrollbar {
-      display: none; /* Chrome/Safari */
+      display: none; 
     }
   }
 }
@@ -226,7 +222,7 @@
 .mobileCard {
   @media (max-width: 768px) {
     scroll-snap-align: center;
-    flex: 0 0 85%; /* 85% width so the next card peeks in naturally */
+    flex: 0 0 85%; 
     max-width: 340px;
   }
 }

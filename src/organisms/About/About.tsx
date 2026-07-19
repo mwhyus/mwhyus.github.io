@@ -1,8 +1,3 @@
-// ============================================================
-// About.tsx — Organism: Premium About Me section
-// DESIGN.md §3: entranceTransition, stagger, reduced motion
-// Updated: Two-column layout, count-up stats, glass card stats
-// ============================================================
 import React from 'react'
 import { motion } from 'framer-motion'
 import { SectionTitle } from '../../atoms/SectionTitle'
@@ -11,7 +6,6 @@ import { useCountUp } from '../../hooks/useCountUp'
 import { entranceTransition, fadeInUp, slideInLeft, slideInRight } from '../../hooks/motionVariants'
 import styles from './About.module.scss'
 
-// ─── Stat Item with Count-Up ──────────────────────────────────
 interface StatConfig {
   end:    number
   suffix: string
@@ -47,7 +41,6 @@ const StatItem: React.FC<StatConfig & { index: number }> = React.memo(
 )
 StatItem.displayName = 'StatItem'
 
-// ─── Main Component ───────────────────────────────────────────
 export const About: React.FC = React.memo(() => {
   return (
     <section id="about" className={styles.section} aria-label="About me section">
@@ -55,7 +48,7 @@ export const About: React.FC = React.memo(() => {
         <SectionTitle>About Me</SectionTitle>
 
         <div className={styles.grid}>
-          {/* Left — Text Block */}
+          {}
           <motion.div
             className={styles.textBlock}
             variants={slideInLeft}
@@ -99,7 +92,7 @@ export const About: React.FC = React.memo(() => {
             </div>
           </motion.div>
 
-          {/* Right — Stats Glass Card */}
+          {}
           <motion.div
             className={styles.statsBlock}
             variants={slideInRight}
@@ -108,7 +101,7 @@ export const About: React.FC = React.memo(() => {
             viewport={{ once: true, margin: '-80px' }}
           >
             <div className={styles.statsCard}>
-              {/* Decorative amber glow */}
+              {}
               <div className={styles.statsGlow} aria-hidden="true" />
 
               <motion.div
@@ -123,7 +116,7 @@ export const About: React.FC = React.memo(() => {
                 ))}
               </motion.div>
 
-              {/* Timeline milestones */}
+              {}
               <div className={styles.timeline}>
                 {[
                   { year: '2016', label: 'Joined international youth org' },

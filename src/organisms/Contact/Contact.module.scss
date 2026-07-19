@@ -1,8 +1,3 @@
-// ============================================================
-// Contact.module.scss — Premium Contact Section
-// DESIGN.md §2: glass-card mixin, amber focus glow
-// Updated: Floating label inputs, magnetic button, focus ring
-// ============================================================
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
@@ -26,7 +21,6 @@
   }
 }
 
-// ─── Left: Socials ────────────────────────────────────────────
 .left {
   display:        flex;
   flex-direction: column;
@@ -95,7 +89,6 @@
   color:     var(--color-text-muted);
 }
 
-// ─── Right: Form Card ─────────────────────────────────────────
 .right {
   width: 100%;
 }
@@ -129,7 +122,6 @@
   }
 }
 
-// ─── Floating Label Field ─────────────────────────────────────
 .floatField {
   position: relative;
 }
@@ -154,7 +146,6 @@
     background:   rgba(218, 165, 32, 0.03);
   }
 
-  // Move label up when there's content
   &:not(:placeholder-shown) ~ .floatLabel,
   &:focus ~ .floatLabel {
     top:       0.5rem;
@@ -176,7 +167,6 @@
   font-weight:    500;
 }
 
-// ─── Magnetic Submit Button ────────────────────────────────────
 .submitBtn {
   padding:         1rem 2rem;
   border-radius:   10px;

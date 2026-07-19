@@ -1,8 +1,3 @@
-// ============================================================
-// About.module.scss — Two-column About Section
-// DESIGN.md §2: glass-card mixin, amber accents
-// Updated: grid layout, stats glass card, timeline milestones
-// ============================================================
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
@@ -20,7 +15,6 @@
   @include container;
 }
 
-// ─── Two-Column Grid ─────────────────────────────────────────
 .grid {
   display:     grid;
   grid-template-columns: 1fr 1fr;
@@ -33,7 +27,6 @@
   }
 }
 
-// ─── Left: Text Block ─────────────────────────────────────────
 .textBlock {
   display:        flex;
   flex-direction: column;
@@ -68,7 +61,6 @@
   margin-top: 0.75rem;
 }
 
-// ─── Right: Stats Glass Card ──────────────────────────────────
 .statsBlock {
   position: sticky;
   top:      calc(var(--nav-height) + 2rem);
@@ -81,7 +73,6 @@
   overflow: hidden;
 }
 
-// Decorative amber glow in card corner
 .statsGlow {
   position:      absolute;
   top:           -60px;
@@ -93,7 +84,6 @@
   pointer-events: none;
 }
 
-// ─── Stats Grid ───────────────────────────────────────────────
 .statsGrid {
   display:               grid;
   grid-template-columns: repeat(3, 1fr);
@@ -138,7 +128,6 @@
   margin-top:     0.2rem;
 }
 
-// ─── Timeline ─────────────────────────────────────────────────
 .timeline {
   display:        flex;
   flex-direction: column;

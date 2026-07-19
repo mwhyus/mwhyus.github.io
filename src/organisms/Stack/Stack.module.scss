@@ -9,9 +9,8 @@
   padding: 0 2rem;
 }
 
-// ─── Category Group ──────────────────────────────────────────
 .category {
-  // Add top margin to all categories except the first
+
   & + & {
     margin-top: 3.5rem;
   }
@@ -36,7 +35,6 @@
   margin: 0;
   white-space: nowrap;
 
-  // Decorative left bar accent
   position: relative;
   padding-left: 0.875rem;
   &::before {
@@ -58,7 +56,6 @@
   margin: 0;
 }
 
-// ─── Cards Grid ──────────────────────────────────────────────
 .grid {
   display: flex;
   flex-wrap: wrap;
@@ -88,7 +85,7 @@
 }
 
 .card {
-  // Glass Protocol (DESIGN.md §3)
+
   background: var(--glass-fill);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));

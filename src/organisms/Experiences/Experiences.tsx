@@ -1,8 +1,3 @@
-// ============================================================
-// Experiences.tsx — Organism: Vertical Timeline of Experiences
-// DESIGN.md §3: spring entrance, stagger, reduced motion
-// Updated: Vertical timeline layout, animated connector line
-// ============================================================
 import React from 'react'
 import { motion } from 'framer-motion'
 import { RiExternalLinkLine, RiComputerLine, RiSmartphoneLine, RiBarChart2Line } from 'react-icons/ri'
@@ -47,7 +42,6 @@ const EXPERIENCES: ExperienceItem[] = [
   },
 ]
 
-// ─── Experience Card (with tilt) ─────────────────────────────
 const ExperienceCard: React.FC<{
   item:  ExperienceItem
   index: number
@@ -65,7 +59,7 @@ const ExperienceCard: React.FC<{
       viewport={{ once: true, margin: '-60px' }}
       transition={{ ...entranceTransition, delay: index * 0.12 }}
     >
-      {/* Timeline dot */}
+      {}
       <div className={styles.dot} aria-hidden="true">
         <div className={styles.dotInner} />
       </div>
@@ -80,7 +74,7 @@ const ExperienceCard: React.FC<{
         target="_blank"
         rel="noopener noreferrer"
       >
-        {/* Glow */}
+        {}
         <motion.div
           className={styles.glow}
           style={{ '--glow-x': glowX, '--glow-y': glowY } as React.CSSProperties}
@@ -110,7 +104,6 @@ const ExperienceCard: React.FC<{
 })
 ExperienceCard.displayName = 'ExperienceCard'
 
-// ─── Main Component ───────────────────────────────────────────
 export const Experiences: React.FC = React.memo(() => {
   return (
     <section id="experiences" className={styles.section} aria-label="Experiences section">
@@ -120,7 +113,7 @@ export const Experiences: React.FC = React.memo(() => {
         </SectionTitle>
 
         <div className={styles.timeline}>
-          {/* Animated connector line */}
+          {}
           <motion.div
             className={styles.connectorLine}
             aria-hidden="true"

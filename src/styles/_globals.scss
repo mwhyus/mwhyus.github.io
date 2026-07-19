@@ -1,6 +1,3 @@
-// ============================================================
-// _globals.scss — Base Reset + Typography + Scrollbar
-// ============================================================
 @use 'variables' as *;
 @use 'mixins' as *;
 
@@ -13,7 +10,7 @@
 }
 
 :root {
-  // CSS Custom Properties — mapped from SCSS tokens for use in CSS Modules
+
   --color-accent-amber: #{$color-accent-amber};
   --color-accent-gold:  #{$color-accent-gold};
   --color-text-heading: #{$color-text-heading};
@@ -37,18 +34,15 @@
   --nav-height:   #{$nav-height};
   --max-width:    #{$max-width};
 
-  // Z-Index Layering (DESIGN.md §5)
   --z-3d-bg:   #{$z-3d-bg};
   --z-content: #{$z-content};
   --z-nav:     #{$z-nav};
   --z-modal:   #{$z-modal};
 
-  // Gradient Colors
   --gradient-amber: #{$gradient-amber};
   --gradient-gold:  #{$gradient-gold};
   --gradient-warm:  #{$gradient-warm};
 
-  // Section gap
   --section-gap: #{$spacing-xxl};
 }
 
@@ -97,7 +91,6 @@ button {
   font-family: $font-body;
 }
 
-// Custom scrollbar
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -109,29 +102,21 @@ button {
   border-radius: 3px;
 }
 
-// Selection color
 ::selection {
   background: rgba($color-accent-amber, 0.3);
   color: $color-text-heading;
 }
 
-// Canvas R3F fix
 canvas {
   display: block;
 }
 
-// Layout helper
 .container {
   max-width: $max-width;
   margin: 0 auto;
   padding: 0 $spacing-lg;
 }
 
-// ============================================================
-// Accessibility: Reduced Motion (DESIGN.md §3 — Mandatory)
-// Disables all non-essential transitions and animations for
-// users who have enabled prefers-reduced-motion in their OS.
-// ============================================================
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

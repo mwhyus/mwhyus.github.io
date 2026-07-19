@@ -1,8 +1,3 @@
-// ============================================================
-// AnimatedText.tsx — Atom: Character/Word Split Animation
-// DESIGN.md §3: Spring physics, staggered entrance
-// SKILL.md §1a: Single responsibility — only handles text animation
-// ============================================================
 import React, { useMemo } from 'react'
 import { motion, type Variants } from 'framer-motion'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
@@ -14,10 +9,10 @@ import {
 
 interface AnimatedTextProps {
   children:   string
-  /** 'chars' splits by character, 'words' by word */
+  
   splitBy?:   'chars' | 'words'
   className?: string
-  /** Element tag to render (defaults to span) */
+  
   as?:        'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'span'
   delay?:     number
 }
@@ -56,7 +51,6 @@ export const AnimatedText: React.FC<AnimatedTextProps> = React.memo(({
     return children.split('')
   }, [children, splitBy])
 
-  // Motion component with correct tag
   const MotionTag = motion[Tag] as typeof motion.span
 
   return (

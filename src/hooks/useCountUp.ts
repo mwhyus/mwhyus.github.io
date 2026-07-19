@@ -1,8 +1,3 @@
-// ============================================================
-// useCountUp.ts — Animated Counter Hook
-// SKILL.md §3.2: Logic separated from presentation
-// Triggers on viewport entry, respects reduced-motion
-// ============================================================
 import { useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from './useReducedMotion'
 
@@ -18,10 +13,6 @@ interface CountUpReturn {
   ref: React.RefObject<HTMLElement | null>
 }
 
-/**
- * Animates a number from `start` to `end` when the target element
- * enters the viewport. Instantly shows final value if reduced-motion.
- */
 export function useCountUp({
   end,
   duration = 1800,
@@ -52,7 +43,7 @@ export function useCountUp({
         const tick = (now: number) => {
           const elapsed  = now - startTime
           const progress = Math.min(elapsed / duration, 1)
-          // Ease out cubic
+
           const eased = 1 - Math.pow(1 - progress, 3)
           const current = Math.round(start + range * eased)
           setCount(`${current}${suffix}`)

@@ -1,7 +1,3 @@
-// ============================================================
-// useScrollReveal.ts — Intersection Observer for fade-in-up
-// DESIGN.md §4: Viewport reveal with staggered "fade-in-up"
-// ============================================================
 import { useEffect, useRef, useState } from 'react'
 
 interface ScrollRevealOptions {

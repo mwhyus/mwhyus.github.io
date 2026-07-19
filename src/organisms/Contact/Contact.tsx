@@ -1,8 +1,3 @@
-// ============================================================
-// Contact.tsx — Organism: Premium Contact Section
-// DESIGN.md §3: spring physics, entrance stagger, reduced motion
-// Updated: Magnetic submit button, floating labels, focus glow
-// ============================================================
 import React, { useState, useCallback, useRef } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 import { RiLinkedinBoxLine, RiGithubLine, RiGitlabLine, RiMailLine, RiCheckLine, RiSendPlaneLine } from 'react-icons/ri'
@@ -25,7 +20,6 @@ const SOCIALS: SocialLink[] = [
   { icon: <RiMailLine />,        label: 'Email',    href: 'mailto:wahyu@example.com',              username: 'Get in touch'          },
 ]
 
-// ─── Magnetic Button ──────────────────────────────────────────
 const MagneticButton: React.FC<{
   submitted: boolean
   className: string
@@ -72,7 +66,6 @@ const MagneticButton: React.FC<{
 }
 MagneticButton.displayName = 'MagneticButton'
 
-// ─── Floating Label Field ─────────────────────────────────────
 const FloatField: React.FC<{
   id:          string
   label:       string
@@ -112,7 +105,6 @@ const FloatField: React.FC<{
 }
 FloatField.displayName = 'FloatField'
 
-// ─── Main Component ───────────────────────────────────────────
 export const Contact: React.FC = React.memo(() => {
   const [submitted, setSubmitted] = useState(false)
 
@@ -130,7 +122,7 @@ export const Contact: React.FC = React.memo(() => {
         </SectionTitle>
 
         <div className={styles.grid}>
-          {/* Left — Socials */}
+          {}
           <motion.div
             className={styles.left}
             variants={slideInLeft}
@@ -168,7 +160,7 @@ export const Contact: React.FC = React.memo(() => {
             </div>
           </motion.div>
 
-          {/* Right — Form with floating labels */}
+          {}
           <motion.div
             className={styles.right}
             variants={slideInRight}

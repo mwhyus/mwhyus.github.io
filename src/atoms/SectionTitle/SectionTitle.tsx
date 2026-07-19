@@ -1,8 +1,3 @@
-// ============================================================
-// SectionTitle.tsx — Atom: Section heading with animated text + accent line
-// DESIGN.md §3: Spring physics, entranceTransition
-// Updated: Uses AnimatedText for character reveal, wider accent line
-// ============================================================
 import React from 'react'
 import { motion } from 'framer-motion'
 import { AnimatedText } from '../AnimatedText'

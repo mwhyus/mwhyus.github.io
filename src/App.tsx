@@ -1,7 +1,3 @@
-// ============================================================
-// App.tsx — Root Application Component
-// SKILL.md: SOLID, single responsibility, no any types
-// ============================================================
 import React, { useState, useEffect } from 'react'
 import { BackgroundCanvas } from './three/BackgroundCanvas'
 import { Navbar }      from './organisms/Navbar'
@@ -32,13 +28,13 @@ const App: React.FC = () => {
 
   return (
     <>
-      {/* 3D Background Canvas — fixed behind all content */}
+      {}
       <BackgroundCanvas isMobile={isMobile} />
 
-      {/* Navigation */}
+      {}
       <Navbar />
 
-      {/* Main content */}
+      {}
       <main id="main-content" role="main">
         <Hero />
         <About />
@@ -49,7 +45,7 @@ const App: React.FC = () => {
         <Contact />
       </main>
 
-      {/* Footer */}
+      {}
       <Footer />
     </>
   )

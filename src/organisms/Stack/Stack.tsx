@@ -1,8 +1,3 @@
-// ============================================================
-// Stack.tsx — Organism: Tech Stack Grid with Category Tabs
-// DESIGN.md §3: AnimatePresence layout reflow, spring physics
-// Updated: Category tabs with TabFilter, animated grid reflow
-// ============================================================
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -17,7 +12,6 @@ import { useGlassTilt } from '../../hooks/useGlassTilt'
 import { entranceTransition, staggerContainer, fadeInUp } from '../../hooks/motionVariants'
 import styles from './Stack.module.scss'
 
-// ─── Flow JS Custom Logo ──────────────────────────────────────
 const AntigravityLogo = () => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '1em', height: '1em' }}>
     <path d="M12 2C12 7.52 16.48 12 22 12C16.48 12 12 16.48 12 22C12 16.48 7.52 12 2 12C7.52 12 12 7.52 12 2Z" fill="currentColor" />
@@ -40,7 +34,6 @@ const FlowLogo = () => (
   </svg>
 )
 
-// ─── Types ───────────────────────────────────────────────────
 interface SkillItem {
   icon:     React.ReactNode
   name:     string
@@ -52,7 +45,6 @@ interface SkillItem {
 const CATEGORY_TABS = ['All', 'AI Tools', 'Dev Tech'] as const
 type CategoryTab = typeof CATEGORY_TABS[number]
 
-// ─── Skill Data ───────────────────────────────────────────────
 const SKILLS: SkillItem[] = [
   { icon: <AntigravityLogo />, name: 'Antigravity', level: 'Advanced',     color: '#A78BFA', category: 'AI Tools' },
   { icon: <RiGithubLine />,    name: 'GitHub Copilot', level: 'Advanced',  color: '#F0F6FF', category: 'AI Tools' },
@@ -75,7 +67,6 @@ const LEVEL_COLORS: Record<SkillItem['level'], string> = {
   Learning:     '#8B6914',
 }
 
-// ─── Individual Tilt Card ─────────────────────────────────────
 const SkillCard: React.FC<{ skill: SkillItem; index: number }> = React.memo(
   ({ skill, index }) => {
     const { rotateX, rotateY, glowX, glowY, handleMouseMove, handleMouseLeave, cardRef } =
@@ -121,7 +112,6 @@ const SkillCard: React.FC<{ skill: SkillItem; index: number }> = React.memo(
 )
 SkillCard.displayName = 'SkillCard'
 
-// ─── Main Component ───────────────────────────────────────────
 export const Stack: React.FC = React.memo(() => {
   const [activeTab, setActiveTab] = useState<CategoryTab>('All')
 

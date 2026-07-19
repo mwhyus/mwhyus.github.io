@@ -1,8 +1,3 @@
-// ============================================================
-// Projects.tsx — Organism: Project gallery with capability-based filter chips
-// User feedback: Client-side filtering, AnimatePresence layout reflow,
-//   glassmorphic chips, "All/Product Engineering/Mobile Systems/System Architecture"
-// ============================================================
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { RiGithubLine, RiExternalLinkLine } from 'react-icons/ri'
@@ -15,7 +10,6 @@ import {
 } from '../../hooks/motionVariants'
 import styles from './Projects.module.scss'
 
-// ─── Types ───────────────────────────────────────────────────
 const CAPABILITY_TABS = [
   'All',
   'Product Engineering',
@@ -36,7 +30,6 @@ interface Project {
   featured?:    boolean
 }
 
-// ─── Data ────────────────────────────────────────────────────
 const PROJECTS: Project[] = [
   {
     title:        'SayurHub — Farm-to-Table App',
@@ -69,7 +62,6 @@ const PROJECTS: Project[] = [
   },
 ]
 
-// ─── Project Card ─────────────────────────────────────────────
 const ProjectCard: React.FC<{ project: Project; index: number }> = React.memo(
   ({ project, index }) => {
     const { rotateX, rotateY, glowX, glowY, handleMouseMove, handleMouseLeave, cardRef } =
@@ -93,14 +85,14 @@ const ProjectCard: React.FC<{ project: Project; index: number }> = React.memo(
           whileHover={{ y: -6 }}
           transition={entranceTransition}
         >
-          {/* Glow highlight */}
+          {}
           <motion.div
             className={styles.glow}
             style={{ '--glow-x': glowX, '--glow-y': glowY } as React.CSSProperties}
             aria-hidden="true"
           />
 
-          {/* Gradient Thumbnail */}
+          {}
           <div className={styles.thumbnail} style={{ background: project.gradient }}>
             {project.featured && (
               <span className={styles.featuredBadge}>Featured</span>
@@ -112,7 +104,7 @@ const ProjectCard: React.FC<{ project: Project; index: number }> = React.memo(
             </div>
           </div>
 
-          {/* Body */}
+          {}
           <div className={styles.body} style={{ transform: 'translateZ(16px)' }}>
             <h3 className={styles.title}>{project.title}</h3>
             <p className={styles.description}>{project.description}</p>
@@ -157,7 +149,6 @@ const ProjectCard: React.FC<{ project: Project; index: number }> = React.memo(
 )
 ProjectCard.displayName = 'ProjectCard'
 
-// ─── Main Component ───────────────────────────────────────────
 export const Projects: React.FC = React.memo(() => {
   const [activeTab, setActiveTab] = useState<CapabilityTab>('All')
 
@@ -172,14 +163,14 @@ export const Projects: React.FC = React.memo(() => {
           Projects
         </SectionTitle>
 
-        {/* Capability-based filter chips */}
+        {}
         <TabFilter
           tabs={CAPABILITY_TABS}
           active={activeTab}
           onChange={setActiveTab}
         />
 
-        {/* Grid with AnimatePresence layout animations */}
+        {}
         <motion.div
           className={styles.grid}
           layout

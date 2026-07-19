@@ -1,12 +1,5 @@
-// ============================================================
-// _mixins.scss — Canonical Design System Mixins
-// Source of Truth: .agents/design/DESIGN.md §2 (Glass Protocol)
-// SKILL.md §2: CSS variables only — no hardcoded values
-// ============================================================
 @use 'variables' as *;
 
-// ─── Glass Protocol (DESIGN.md §2) ───────────────────────────
-// Mandatory for ALL interactive containers.
 @mixin glass-card($hover: true) {
   background:          var(--glass-fill);
   backdrop-filter:     blur(var(--glass-blur));
@@ -29,7 +22,6 @@
   }
 }
 
-// ─── Gradient Text (amber → gold) ────────────────────────────
 @mixin gradient-text($from: #DAA520, $to: #FFF0A0) {
   background:              linear-gradient(135deg, $from 0%, $to 100%);
   -webkit-background-clip: text;
@@ -38,7 +30,6 @@
   color:                   transparent;
 }
 
-// ─── Section Padding ─────────────────────────────────────────
 @mixin section-padding {
   padding: $spacing-xxl 0;
 
@@ -51,7 +42,6 @@
   }
 }
 
-// ─── Container ───────────────────────────────────────────────
 @mixin container {
   max-width: $max-width;
   margin:    0 auto;
@@ -62,8 +52,6 @@
   }
 }
 
-// ─── Stagger-Enter Keyframe Base ─────────────────────────────
-// CSS fallback for when JS/Framer Motion is not available
 @mixin stagger-enter($delay: 0ms) {
   opacity:   0;
   transform: translateY(24px);
@@ -77,14 +65,12 @@
   }
 }
 
-// ─── Amber Glow Focus Ring ───────────────────────────────────
 @mixin focus-ring {
   outline:     none;
   box-shadow:  0 0 0 3px rgba(218, 165, 32, 0.4);
   border-color: rgba(218, 165, 32, 0.6);
 }
 
-// ─── Metallic Border ─────────────────────────────────────────
 @mixin metallic-border {
   border: 1px solid;
   border-image: linear-gradient(
@@ -95,7 +81,6 @@
   ) 1;
 }
 
-// ─── Responsive Media Query Helpers ─────────────────────────
 @mixin mobile { @media (max-width: #{$bp-tablet - 1px}) { @content; } }
 @mixin tablet { @media (min-width: $bp-tablet) and (max-width: #{$bp-desktop - 1px}) { @content; } }
 @mixin desktop { @media (min-width: $bp-desktop) { @content; } }
