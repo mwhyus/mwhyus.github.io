@@ -1,54 +1,89 @@
 // ============================================================
-// About.tsx — Organism: Minimalist About Me section
+// About.tsx — Organism: Premium About Me section
+// DESIGN.md §3: entranceTransition, stagger, reduced motion
+// Updated: Two-column layout, count-up stats, glass card stats
 // ============================================================
 import React from 'react'
 import { motion } from 'framer-motion'
 import { SectionTitle } from '../../atoms/SectionTitle'
 import { Button } from '../../atoms/Button'
+import { useCountUp } from '../../hooks/useCountUp'
+import { entranceTransition, fadeInUp, slideInLeft, slideInRight } from '../../hooks/motionVariants'
 import styles from './About.module.scss'
 
-const STATS = [
-  { value: '5+', label: 'Years Learning Tech' },
-  { value: '3+', label: 'Years in Leadership' },
-  { value: '10+', label: 'Team Projects' },
+// ─── Stat Item with Count-Up ──────────────────────────────────
+interface StatConfig {
+  end:    number
+  suffix: string
+  label:  string
+}
+
+const STATS: StatConfig[] = [
+  { end: 5,  suffix: '+', label: 'Years Learning Tech' },
+  { end: 3,  suffix: '+', label: 'Years in Leadership' },
+  { end: 10, suffix: '+', label: 'Team Projects' },
 ]
 
+const StatItem: React.FC<StatConfig & { index: number }> = React.memo(
+  ({ end, suffix, label, index }) => {
+    const { count, ref } = useCountUp({ end, suffix, duration: 1600 })
+
+    return (
+      <motion.div
+        className={styles.statItem}
+        variants={fadeInUp}
+        custom={index}
+      >
+        <span
+          ref={ref as React.RefObject<HTMLSpanElement | null>}
+          className={styles.statValue}
+        >
+          {count}
+        </span>
+        <span className={styles.statLabel}>{label}</span>
+      </motion.div>
+    )
+  }
+)
+StatItem.displayName = 'StatItem'
+
+// ─── Main Component ───────────────────────────────────────────
 export const About: React.FC = React.memo(() => {
   return (
     <section id="about" className={styles.section} aria-label="About me section">
       <div className={styles.container}>
         <SectionTitle>About Me</SectionTitle>
-        
-        <div className={styles.content}>
+
+        <div className={styles.grid}>
+          {/* Left — Text Block */}
           <motion.div
-            className={styles.textWrapper}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            className={styles.textBlock}
+            variants={slideInLeft}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-80px' }}
           >
             <h3 className={styles.tagline}>
-              I'm Wahyu — a <span className={styles.accent}>developer</span> who sees challenges as opportunities to grow.
+              I'm Wahyu — a{' '}
+              <span className={styles.accent}>developer</span>{' '}
+              who sees challenges as opportunities to grow.
             </h3>
-            <p className={styles.bio}>
-              Passionate in business, technology, and experienced leadership in the largest youth-run organization. I have been shaping myself through the ups and downs of my journey, and I enjoy cross-cultural learning and collaboration.
-            </p>
-            <p className={styles.bio}>
-              Actively learning IT since July 2020 through Agile Development and React Native Bootcamps. Despite coming from a cross-disciplinary background, I am eagerly improving my knowledge and skills in the tech field every day.
-            </p>
-            <p className={styles.bio}>
-              From 2016 to 2019, I actively developed my soft skills through an international organization, progressing from Team Member to Executive Board, managing local projects with international clients and national-level events.
-            </p>
 
-            {/* Stats incorporated into text flow for a minimalist look */}
-            <div className={styles.stats}>
-              {STATS.map((stat) => (
-                <div key={stat.label} className={styles.statItem}>
-                  <span className={styles.statValue}>{stat.value}</span>
-                  <span className={styles.statLabel}>{stat.label}</span>
-                </div>
-              ))}
-            </div>
+            <p className={styles.bio}>
+              Passionate in business, technology, and experienced leadership in the largest
+              youth-run organization. I have been shaping myself through the ups and downs
+              of my journey, and I enjoy cross-cultural learning and collaboration.
+            </p>
+            <p className={styles.bio}>
+              Actively learning IT since July 2020 through Agile Development and React Native
+              Bootcamps. Despite coming from a cross-disciplinary background, I am eagerly
+              improving my knowledge and skills in the tech field every day.
+            </p>
+            <p className={styles.bio}>
+              From 2016 to 2019, I actively developed my soft skills through an international
+              organization, progressing from Team Member to Executive Board, managing local
+              projects with international clients and national-level events.
+            </p>
 
             <div className={styles.cta}>
               <Button
@@ -63,10 +98,57 @@ export const About: React.FC = React.memo(() => {
               </Button>
             </div>
           </motion.div>
+
+          {/* Right — Stats Glass Card */}
+          <motion.div
+            className={styles.statsBlock}
+            variants={slideInRight}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-80px' }}
+          >
+            <div className={styles.statsCard}>
+              {/* Decorative amber glow */}
+              <div className={styles.statsGlow} aria-hidden="true" />
+
+              <motion.div
+                className={styles.statsGrid}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: '-80px' }}
+                transition={{ ...entranceTransition, staggerChildren: 0.1 }}
+              >
+                {STATS.map((stat, i) => (
+                  <StatItem key={stat.label} {...stat} index={i} />
+                ))}
+              </motion.div>
+
+              {/* Timeline milestones */}
+              <div className={styles.timeline}>
+                {[
+                  { year: '2016', label: 'Joined international youth org' },
+                  { year: '2020', label: 'Started IT journey (Agile & RN)' },
+                  { year: '2024', label: 'Building premium digital products' },
+                ].map((item, i) => (
+                  <motion.div
+                    key={item.year}
+                    className={styles.timelineItem}
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ ...entranceTransition, delay: i * 0.12 }}
+                  >
+                    <span className={styles.timelineYear}>{item.year}</span>
+                    <span className={styles.timelineSep} aria-hidden="true" />
+                    <span className={styles.timelineLabel}>{item.label}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
   )
 })
-
 About.displayName = 'About'

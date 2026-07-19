@@ -1,146 +1,194 @@
+// ============================================================
+// Projects.module.scss — Project Gallery Styles
+// DESIGN.md §2: glass-card mixin, amber accents
+// Updated: 3D tilt wrapper, glow highlight, featured badge
+// ============================================================
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
 .section {
-  padding: 7rem 0;
+  @include section-padding;
 }
 
 .container {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 2rem;
+  @include container;
 }
 
+// ─── Grid ────────────────────────────────────────────────────
 .grid {
-  display: grid;
+  display:               grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  gap:                   2rem;
+  align-items:           stretch; // Ensure perfect geometric row heights
 
-  @media (max-width: 900px) {
+  @media (max-width: 960px) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  /* Mobile Layout: Native Horizontal Scroll List */
-  @media (max-width: 768px) {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 1rem;
-    padding-bottom: 2rem;
-    margin-top: 1rem;
-    
-    /* Hide scrollbar for a cleaner premium look */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
-    &::-webkit-scrollbar {
-      display: none; /* Chrome/Safari */
-    }
+  @media (max-width: 600px) {
+    display:              flex;
+    overflow-x:           auto;
+    scroll-snap-type:     x mandatory;
+    gap:                  1rem;
+    padding-bottom:       1rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width:      none;
+    &::-webkit-scrollbar { display: none; }
   }
 }
 
+// ─── Card Shell (layout-aware for AnimatePresence) ────────────
 .card {
-  background: var(--glass-fill);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: var(--glass-border);
-  border-radius: var(--glass-radius-card);
-  box-shadow: var(--glass-shadow);
-  overflow: hidden;
-  display: flex;
+  perspective: 1000px;
+
+  @media (max-width: 600px) {
+    scroll-snap-align: center;
+    flex:              0 0 85%;
+    max-width:         320px;
+  }
+}
+
+// ─── Tilting Inner ────────────────────────────────────────────
+.cardInner {
+  position:       relative;
+  @include glass-card(false); // hover handled by Framer Motion
+  overflow:       hidden;
+  display:        flex;
   flex-direction: column;
-  transition: border 0.3s ease, box-shadow 0.3s ease;
+  cursor:         default;
+  height:         100%;
 
   &:hover {
-    border: var(--glass-border-hover);
-    box-shadow: var(--glass-shadow-hover);
-  }
-
-  @media (max-width: 768px) {
-    scroll-snap-align: center;
-    flex: 0 0 85%; /* 85% width so the next card peeks in naturally */
-    max-width: 340px;
+    background:  var(--glass-fill-hover);
+    border-color: rgba(218, 165, 32, 0.35);
+    box-shadow:
+      var(--glass-shadow-hover),
+      0 0 30px rgba(218, 165, 32, 0.08);
   }
 }
 
+// ─── Mouse-following Glow ─────────────────────────────────────
+.glow {
+  position:        absolute;
+  inset:           0;
+  border-radius:   inherit;
+  pointer-events:  none;
+  opacity:         0;
+  transition:      opacity 0.3s ease;
+  background:      radial-gradient(
+    180px circle at calc(var(--glow-x)) calc(var(--glow-y)),
+    rgba(218, 165, 32, 0.12),
+    transparent 70%
+  );
+
+  .cardInner:hover & {
+    opacity: 1;
+  }
+}
+
+// ─── Thumbnail ────────────────────────────────────────────────
 .thumbnail {
-  height: 180px;
+  height:   180px;
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
+}
+
+.featuredBadge {
+  position:       absolute;
+  top:            0.875rem;
+  right:          0.875rem;
+  padding:        0.2rem 0.65rem;
+  border-radius:  100px;
+  font-family:    var(--font-heading);
+  font-size:      0.68rem;
+  font-weight:    700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background:     rgba(218, 165, 32, 0.85);
+  color:          #0a0d14;
+  backdrop-filter: blur(8px);
+  z-index:        1;
 }
 
 .thumbnailInner {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
+  position:        absolute;
+  inset:           0;
+  display:         flex;
+  align-items:     center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.25);
+  background:      rgba(0, 0, 0, 0.28);
 }
 
 .thumbnailText {
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.9);
-  text-align: center;
-  padding: 0 1rem;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  font-family:  var(--font-heading);
+  font-size:    1.05rem;
+  font-weight:  700;
+  color:        rgba(255, 255, 255, 0.92);
+  text-align:   center;
+  padding:      0 1rem;
+  text-shadow:  0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
+// ─── Body ────────────────────────────────────────────────────
 .body {
-  padding: 1.5rem;
-  display: flex;
+  padding:        1.5rem;
+  display:        flex;
   flex-direction: column;
-  gap: 0.875rem;
-  flex: 1;
+  gap:            0.875rem;
+  flex:           1;
 }
 
 .title {
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--color-text-heading);
-  line-height: 1.4;
+  font-family:  var(--font-heading);
+  font-size:    1.0rem;
+  font-weight:  700;
+  color:        var(--color-text-heading);
+  line-height:  1.4;
 }
 
 .description {
-  color: var(--color-text-body);
-  font-size: 0.875rem;
-  line-height: 1.7;
-  flex: 1;
+  color:       var(--color-text-body);
+  font-size:   0.875rem;
+  line-height: 1.75;
+  flex:        1;
 }
 
+// ─── Tags ────────────────────────────────────────────────────
 .tags {
-  display: flex;
+  display:   flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap:       0.4rem;
 }
 
 .tag {
-  font-size: 0.68rem;
-  font-weight: 600;
+  font-size:      0.68rem;
+  font-weight:    600;
   letter-spacing: 0.04em;
-  padding: 0.2rem 0.55rem;
-  border-radius: 20px;
-  background: rgba(218, 165, 32, 0.1);
-  border: 1px solid rgba(218, 165, 32, 0.2);
-  color: var(--color-accent-gold);
+  padding:        0.2rem 0.6rem;
+  border-radius:  20px;
+  background:     rgba(218, 165, 32, 0.1);
+  border:         1px solid rgba(218, 165, 32, 0.2);
+  color:          var(--color-accent-gold);
 }
 
+// ─── Links ───────────────────────────────────────────────────
 .links {
-  display: flex;
-  gap: 1rem;
+  display:     flex;
+  gap:         1rem;
   padding-top: 0.25rem;
 }
 
 .iconLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--color-text-body);
+  display:         inline-flex;
+  align-items:     center;
+  gap:             0.35rem;
+  font-size:       0.82rem;
+  font-weight:     600;
+  color:           var(--color-text-body);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition:      color 0.2s ease;
 
-  &:hover {
-    color: var(--color-accent-amber);
-  }
+  &:hover  { color: var(--color-accent-amber); }
+  &:focus-visible { @include focus-ring; border-radius: 4px; }
 }

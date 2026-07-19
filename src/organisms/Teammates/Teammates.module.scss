@@ -1,5 +1,8 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
 .section {
-  padding: 7rem 0;
+  @include section-padding;
   background: linear-gradient(180deg, transparent 0%, rgba(13, 17, 32, 0.5) 50%, transparent 100%);
 }
 
@@ -59,21 +62,38 @@
   }
 }
 
+.cardWrapper {
+  perspective: 1000px;
+}
+
 .card {
-  background: var(--glass-fill);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: var(--glass-border);
-  border-radius: var(--glass-radius-card);
-  box-shadow: var(--glass-shadow);
-  overflow: hidden;
-  transition: border 0.3s ease, box-shadow 0.3s ease;
-  cursor: default;
+  @include glass-card(false);
+  overflow:   hidden;
+  cursor:     default;
+  position:   relative;
+  height:     100%;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    border: var(--glass-border-hover);
-    box-shadow: var(--glass-shadow-hover);
+    border-color: rgba(218, 165, 32, 0.35);
+    box-shadow:   var(--glass-shadow-hover);
   }
+}
+
+.glow {
+  position:       absolute;
+  inset:          0;
+  border-radius:  inherit;
+  pointer-events: none;
+  opacity:        0;
+  transition:     opacity 0.3s ease;
+  background:     radial-gradient(
+    160px circle at calc(var(--glow-x)) calc(var(--glow-y)),
+    rgba(218, 165, 32, 0.1),
+    transparent 70%
+  );
+
+  .card:hover & { opacity: 1; }
 }
 
 .photoWrapper {

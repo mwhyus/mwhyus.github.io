@@ -2,4 +2,5 @@
 // index.scss — Root SCSS Entry
 // ============================================================
 @use 'variables' as *;
+@forward 'mixins';
 @use 'globals';

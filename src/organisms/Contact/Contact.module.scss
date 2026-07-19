@@ -1,191 +1,211 @@
+// ============================================================
+// Contact.module.scss — Premium Contact Section
+// DESIGN.md §2: glass-card mixin, amber focus glow
+// Updated: Floating label inputs, magnetic button, focus ring
+// ============================================================
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
 .section {
-  padding: 7rem 0;
+  @include section-padding;
 }
 
 .container {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 2rem;
+  @include container;
 }
 
 .grid {
-  display: grid;
+  display:               grid;
   grid-template-columns: 1fr 1.3fr;
-  gap: 3rem;
+  gap:                   3.5rem;
+  align-items:           start;
 
-  @media (max-width: 768px) {
+  @include mobile {
     grid-template-columns: 1fr;
+    gap:                   2.5rem;
   }
 }
 
+// ─── Left: Socials ────────────────────────────────────────────
 .left {
-  display: flex;
+  display:        flex;
   flex-direction: column;
-  gap: 2rem;
+  gap:            2rem;
 }
 
 .intro {
-  color: var(--color-text-body);
-  font-size: 1rem;
-  line-height: 1.8;
+  color:       var(--color-text-body);
+  font-size:   1.0rem;
+  line-height: 1.85;
 }
 
 .socials {
-  display: flex;
+  display:        flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap:            0.75rem;
 }
 
 .socialLink {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.875rem 1rem;
-  border-radius: 12px;
-  background: var(--glass-fill);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: var(--glass-border);
+  display:         flex;
+  align-items:     center;
+  gap:             1rem;
+  padding:         0.875rem 1rem;
+  border-radius:   12px;
+  @include glass-card(false);
   text-decoration: none;
-  transition: all 0.25s ease;
-  cursor: pointer;
+  cursor:          pointer;
+  transition:      all 0.25s ease;
 
   &:hover {
-    background: var(--glass-fill-hover);
-    border: var(--glass-border-hover);
-    box-shadow: var(--glass-shadow-hover);
+    background:  var(--glass-fill-hover);
+    border:      var(--glass-border-hover);
+    box-shadow:  var(--glass-shadow-hover);
 
     .socialIcon {
-      color: var(--color-accent-amber);
+      color:  var(--color-accent-amber);
       filter: drop-shadow(0 0 8px rgba(218, 165, 32, 0.6));
     }
   }
+
+  &:focus-visible { @include focus-ring; }
 }
 
 .socialIcon {
-  font-size: 1.5rem;
-  color: var(--color-text-body);
+  font-size:  1.5rem;
+  color:      var(--color-text-body);
   transition: all 0.25s ease;
   flex-shrink: 0;
 }
 
 .socialText {
-  display: flex;
+  display:        flex;
   flex-direction: column;
-  gap: 0.1rem;
+  gap:            0.1rem;
 }
 
 .socialLabel {
   font-family: var(--font-heading);
-  font-size: 0.875rem;
+  font-size:   0.875rem;
   font-weight: 600;
-  color: var(--color-text-heading);
+  color:       var(--color-text-heading);
 }
 
 .socialUsername {
   font-size: 0.75rem;
-  color: var(--color-text-muted);
+  color:     var(--color-text-muted);
 }
 
+// ─── Right: Form Card ─────────────────────────────────────────
 .right {
   width: 100%;
 }
 
 .formCard {
-  background: var(--glass-fill);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: var(--glass-border);
-  border-radius: var(--glass-radius-card);
-  box-shadow: var(--glass-shadow);
+  @include glass-card(false);
   padding: 2rem;
 }
 
 .formTitle {
-  font-family: var(--font-heading);
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--color-text-heading);
-  margin-bottom: 1.5rem;
+  font-family:   var(--font-heading);
+  font-size:     1.1rem;
+  font-weight:   700;
+  color:         var(--color-text-heading);
+  margin-bottom: 1.75rem;
 }
 
 .form {
-  display: flex;
+  display:        flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap:            1.25rem;
 }
 
 .row {
-  display: grid;
+  display:               grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap:                   1rem;
 
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
   }
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+// ─── Floating Label Field ─────────────────────────────────────
+.floatField {
+  position: relative;
 }
 
-.label {
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-}
-
-.input,
-.textarea {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  color: var(--color-text-heading);
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  outline: none;
-  transition: border 0.2s ease, box-shadow 0.2s ease;
-  resize: none;
-
-  &::placeholder {
-    color: var(--color-text-muted);
-  }
+.floatInput {
+  width:        100%;
+  background:   rgba(255, 255, 255, 0.04);
+  border:       1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding:      1.2rem 1rem 0.5rem;
+  color:        var(--color-text-heading);
+  font-family:  var(--font-body);
+  font-size:    0.9rem;
+  outline:      none;
+  resize:       none;
+  transition:   border-color 0.25s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.25s cubic-bezier(0.2, 0, 0, 1), background 0.25s cubic-bezier(0.2, 0, 0, 1);
 
   &:focus {
-    border-color: rgba(218, 165, 32, 0.5);
-    box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.08);
+    border-color: rgba(218, 165, 32, 0.55);
+    box-shadow:   0 0 0 3px rgba(218, 165, 32, 0.1),
+                  inset 0 0 20px rgba(218, 165, 32, 0.02);
+    background:   rgba(218, 165, 32, 0.03);
+  }
+
+  // Move label up when there's content
+  &:not(:placeholder-shown) ~ .floatLabel,
+  &:focus ~ .floatLabel {
+    top:       0.5rem;
+    font-size: 0.68rem;
+    color:     var(--color-accent-amber);
+    letter-spacing: 0.06em;
   }
 }
 
+.floatLabel {
+  position:       absolute;
+  top:            0.9rem;
+  left:           1rem;
+  font-size:      0.88rem;
+  color:          var(--color-text-muted);
+  pointer-events: none;
+  transition:     all 0.25s cubic-bezier(0.2, 0, 0, 1);
+  text-transform: none;
+  font-weight:    500;
+}
+
+// ─── Magnetic Submit Button ────────────────────────────────────
 .submitBtn {
-  padding: 0.875rem 2rem;
-  border-radius: var(--glass-radius-btn);
-  background: linear-gradient(135deg, #DAA520 0%, #D4AF37 50%, #B8860B 100%);
-  color: #0a0d14;
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
+  padding:         1rem 2rem;
+  border-radius:   10px;
+  background:      linear-gradient(135deg, #DAA520 0%, #FFE074 50%, #B8860B 100%);
+  color:           #0a0d14;
+  font-family:     var(--font-heading);
+  font-size:       0.95rem;
+  font-weight:     700;
+  border:          none;
+  cursor:          pointer;
+  display:         flex;
+  align-items:     center;
   justify-content: center;
-  gap: 0.5rem;
-  box-shadow: 0 4px 20px rgba(218, 165, 32, 0.3);
-  transition: all 0.25s ease;
-  width: 100%;
+  gap:             0.5rem;
+  width:           100%;
+  box-shadow:      0 4px 24px rgba(218, 165, 32, 0.3);
+  transition:      box-shadow 0.25s ease, background 0.25s ease;
+  margin-top:      0.25rem;
 
   &:hover {
-    box-shadow: 0 8px 32px rgba(218, 165, 32, 0.5);
+    box-shadow: 0 8px 36px rgba(218, 165, 32, 0.5),
+                0 0  60px rgba(218, 165, 32, 0.15);
   }
+
+  &:focus-visible { @include focus-ring; }
 
   &.submitted {
     background: linear-gradient(135deg, #2ecc71, #27ae60);
-    box-shadow: 0 4px 20px rgba(46, 204, 113, 0.4);
+    box-shadow: 0 4px 24px rgba(46, 204, 113, 0.4);
+    color:      #fff;
   }
 }

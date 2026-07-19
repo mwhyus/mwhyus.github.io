@@ -1,33 +1,123 @@
 // ============================================================
-// Contact.tsx — Organism: Minimalist contact with glowing socials
-// DESIGN.md §D: Amber glow on hover, minimal social icons
+// Contact.tsx — Organism: Premium Contact Section
+// DESIGN.md §3: spring physics, entrance stagger, reduced motion
+// Updated: Magnetic submit button, floating labels, focus glow
 // ============================================================
-import React, { useState, useCallback } from 'react'
-import { motion } from 'framer-motion'
-import { RiLinkedinBoxLine, RiGithubLine, RiGitlabLine, RiMailLine, RiCheckLine } from 'react-icons/ri'
+import React, { useState, useCallback, useRef } from 'react'
+import { motion, useMotionValue, useSpring } from 'framer-motion'
+import { RiLinkedinBoxLine, RiGithubLine, RiGitlabLine, RiMailLine, RiCheckLine, RiSendPlaneLine } from 'react-icons/ri'
 import { SectionTitle } from '../../atoms/SectionTitle'
+import { entranceTransition, interactionTransition, slideInLeft, slideInRight } from '../../hooks/motionVariants'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
 import styles from './Contact.module.scss'
 
 interface SocialLink {
-  icon: React.ReactNode
-  label: string
-  href: string
+  icon:     React.ReactNode
+  label:    string
+  href:     string
   username: string
 }
 
 const SOCIALS: SocialLink[] = [
-  { icon: <RiLinkedinBoxLine />, label: 'LinkedIn',  href: 'https://www.linkedin.com/in/mwhyus/',  username: 'linkedin.com/in/mwhyus' },
-  { icon: <RiGithubLine />,      label: 'GitHub',    href: 'https://github.com/mwhyus',             username: 'github.com/mwhyus'     },
-  { icon: <RiGitlabLine />,      label: 'GitLab',    href: 'https://gitlab.com/mwhyus',             username: 'gitlab.com/mwhyus'     },
-  { icon: <RiMailLine />,        label: 'Email',     href: 'mailto:wahyu@example.com',              username: 'Get in touch'          },
+  { icon: <RiLinkedinBoxLine />, label: 'LinkedIn', href: 'https://www.linkedin.com/in/mwhyus/',  username: 'linkedin.com/in/mwhyus' },
+  { icon: <RiGithubLine />,      label: 'GitHub',   href: 'https://github.com/mwhyus',             username: 'github.com/mwhyus'     },
+  { icon: <RiGitlabLine />,      label: 'GitLab',   href: 'https://gitlab.com/mwhyus',             username: 'gitlab.com/mwhyus'     },
+  { icon: <RiMailLine />,        label: 'Email',    href: 'mailto:wahyu@example.com',              username: 'Get in touch'          },
 ]
 
+// ─── Magnetic Button ──────────────────────────────────────────
+const MagneticButton: React.FC<{
+  submitted: boolean
+  className: string
+}> = ({ submitted, className }) => {
+  const shouldReduce = useReducedMotion()
+  const btnRef       = useRef<HTMLButtonElement>(null)
+  const rawX = useMotionValue(0)
+  const rawY = useMotionValue(0)
+  const x    = useSpring(rawX, interactionTransition)
+  const y    = useSpring(rawY, interactionTransition)
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    if (shouldReduce || !btnRef.current) return
+    const rect = btnRef.current.getBoundingClientRect()
+    const cx   = rect.left + rect.width / 2
+    const cy   = rect.top  + rect.height / 2
+    rawX.set((e.clientX - cx) * 0.3)
+    rawY.set((e.clientY - cy) * 0.3)
+  }, [rawX, rawY, shouldReduce])
+
+  const handleMouseLeave = useCallback(() => {
+    rawX.set(0)
+    rawY.set(0)
+  }, [rawX, rawY])
+
+  return (
+    <motion.button
+      ref={btnRef}
+      type="submit"
+      className={`${className} ${submitted ? styles.submitted : ''}`}
+      style={shouldReduce ? {} : { x, y }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      whileTap={{ scale: 0.96 }}
+      transition={interactionTransition}
+    >
+      {submitted ? (
+        <><RiCheckLine /> Message Sent!</>
+      ) : (
+        <><RiSendPlaneLine /> Send Message</>
+      )}
+    </motion.button>
+  )
+}
+MagneticButton.displayName = 'MagneticButton'
+
+// ─── Floating Label Field ─────────────────────────────────────
+const FloatField: React.FC<{
+  id:          string
+  label:       string
+  type?:       string
+  rows?:       number
+  required?:   boolean
+}> = ({ id, label, type = 'text', rows, required }) => {
+  const [filled, setFilled] = useState(false)
+  const isTextarea = !!rows
+
+  return (
+    <div className={`${styles.floatField} ${filled ? styles.filled : ''}`}>
+      {isTextarea ? (
+        <textarea
+          id={id}
+          rows={rows}
+          required={required}
+          className={styles.floatInput}
+          onChange={e => setFilled(e.target.value.length > 0)}
+          placeholder=" "
+          aria-label={label}
+        />
+      ) : (
+        <input
+          id={id}
+          type={type}
+          required={required}
+          className={styles.floatInput}
+          onChange={e => setFilled(e.target.value.length > 0)}
+          placeholder=" "
+          aria-label={label}
+        />
+      )}
+      <label htmlFor={id} className={styles.floatLabel}>{label}</label>
+    </div>
+  )
+}
+FloatField.displayName = 'FloatField'
+
+// ─── Main Component ───────────────────────────────────────────
 export const Contact: React.FC = React.memo(() => {
   const [submitted, setSubmitted] = useState(false)
 
   const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Placeholder — show success state
     setSubmitted(true)
     setTimeout(() => setSubmitted(false), 4000)
   }, [])
@@ -41,16 +131,17 @@ export const Contact: React.FC = React.memo(() => {
 
         <div className={styles.grid}>
           {/* Left — Socials */}
-          <div className={styles.left}>
-            <motion.p
-              className={styles.intro}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            >
-              Hi! Feel free to reach out through any of my social channels. I'm always open to discussing new projects, opportunities, or just a chat.
-            </motion.p>
+          <motion.div
+            className={styles.left}
+            variants={slideInLeft}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-60px' }}
+          >
+            <p className={styles.intro}>
+              Hi! Feel free to reach out through any of my social channels.
+              I'm always open to discussing new projects, opportunities, or just a chat.
+            </p>
 
             <div className={styles.socials}>
               {SOCIALS.map((social, i) => (
@@ -64,8 +155,8 @@ export const Contact: React.FC = React.memo(() => {
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20, delay: i * 0.08 }}
-                  whileHover={{ x: 6 }}
+                  transition={{ ...entranceTransition, delay: i * 0.1 }}
+                  whileHover={{ x: 8 }}
                 >
                   <span className={styles.socialIcon}>{social.icon}</span>
                   <div className={styles.socialText}>
@@ -75,50 +166,27 @@ export const Contact: React.FC = React.memo(() => {
                 </motion.a>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          {/* Right — Contact form */}
+          {/* Right — Form with floating labels */}
           <motion.div
             className={styles.right}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.15 }}
+            variants={slideInRight}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-60px' }}
           >
             <div className={styles.formCard}>
               <h3 className={styles.formTitle}>Send a Message</h3>
               <form className={styles.form} onSubmit={handleSubmit} noValidate>
                 <div className={styles.row}>
-                  <div className={styles.field}>
-                    <label htmlFor="contact-name" className={styles.label}>Name</label>
-                    <input id="contact-name" type="text" placeholder="Your name" className={styles.input} required />
-                  </div>
-                  <div className={styles.field}>
-                    <label htmlFor="contact-email" className={styles.label}>Email</label>
-                    <input id="contact-email" type="email" placeholder="your@email.com" className={styles.input} required />
-                  </div>
+                  <FloatField id="contact-name"  label="Your Name"   required />
+                  <FloatField id="contact-email" label="Your Email"  type="email" required />
                 </div>
-                <div className={styles.field}>
-                  <label htmlFor="contact-subject" className={styles.label}>Subject</label>
-                  <input id="contact-subject" type="text" placeholder="What's this about?" className={styles.input} required />
-                </div>
-                <div className={styles.field}>
-                  <label htmlFor="contact-message" className={styles.label}>Message</label>
-                  <textarea id="contact-message" rows={5} placeholder="Tell me about your project or idea..." className={styles.textarea} required />
-                </div>
-                <motion.button
-                  type="submit"
-                  className={`${styles.submitBtn} ${submitted ? styles.submitted : ''}`}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                >
-                  {submitted ? (
-                    <><RiCheckLine /> Message Sent!</>
-                  ) : (
-                    'Send Message'
-                  )}
-                </motion.button>
+                <FloatField id="contact-subject" label="Subject"     required />
+                <FloatField id="contact-message" label="Message"     rows={5}  required />
+
+                <MagneticButton submitted={submitted} className={styles.submitBtn} />
               </form>
             </div>
           </motion.div>
@@ -127,5 +195,4 @@ export const Contact: React.FC = React.memo(() => {
     </section>
   )
 })
-
 Contact.displayName = 'Contact'

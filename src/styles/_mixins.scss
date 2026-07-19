@@ -1,0 +1,101 @@
+// ============================================================
+// _mixins.scss — Canonical Design System Mixins
+// Source of Truth: .agents/design/DESIGN.md §2 (Glass Protocol)
+// SKILL.md §2: CSS variables only — no hardcoded values
+// ============================================================
+@use 'variables' as *;
+
+// ─── Glass Protocol (DESIGN.md §2) ───────────────────────────
+// Mandatory for ALL interactive containers.
+@mixin glass-card($hover: true) {
+  background:          var(--glass-fill);
+  backdrop-filter:     blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border:              var(--glass-border);
+  box-shadow:          inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                       var(--glass-shadow);
+  border-radius:       var(--glass-radius-card);
+
+  @if $hover {
+    transition: background 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+                border     0.3s cubic-bezier(0.23, 1, 0.32, 1),
+                box-shadow 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+
+    &:hover {
+      background:  var(--glass-fill-hover);
+      border:      var(--glass-border-hover);
+      box-shadow:  var(--glass-shadow-hover);
+    }
+  }
+}
+
+// ─── Gradient Text (amber → gold) ────────────────────────────
+@mixin gradient-text($from: #DAA520, $to: #FFF0A0) {
+  background:              linear-gradient(135deg, $from 0%, $to 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip:         text;
+  color:                   transparent;
+}
+
+// ─── Section Padding ─────────────────────────────────────────
+@mixin section-padding {
+  padding: $spacing-xxl 0;
+
+  @media (max-width: $bp-tablet) {
+    padding: calc(#{$spacing-xxl} * 0.8) 0;
+  }
+
+  @media (max-width: $bp-mobile) {
+    padding: $spacing-xl 0;
+  }
+}
+
+// ─── Container ───────────────────────────────────────────────
+@mixin container {
+  max-width: $max-width;
+  margin:    0 auto;
+  padding:   0 $spacing-lg;
+
+  @media (max-width: $bp-mobile) {
+    padding: 0 $spacing-sm;
+  }
+}
+
+// ─── Stagger-Enter Keyframe Base ─────────────────────────────
+// CSS fallback for when JS/Framer Motion is not available
+@mixin stagger-enter($delay: 0ms) {
+  opacity:   0;
+  transform: translateY(24px);
+  animation: staggerEnter 0.6s cubic-bezier(0.23, 1, 0.32, 1) $delay forwards;
+}
+
+@keyframes staggerEnter {
+  to {
+    opacity:   1;
+    transform: translateY(0);
+  }
+}
+
+// ─── Amber Glow Focus Ring ───────────────────────────────────
+@mixin focus-ring {
+  outline:     none;
+  box-shadow:  0 0 0 3px rgba(218, 165, 32, 0.4);
+  border-color: rgba(218, 165, 32, 0.6);
+}
+
+// ─── Metallic Border ─────────────────────────────────────────
+@mixin metallic-border {
+  border: 1px solid;
+  border-image: linear-gradient(
+    135deg,
+    rgba(218, 165, 32, 0.6),
+    rgba(255, 255, 255, 0.1),
+    rgba(212, 175, 55, 0.4)
+  ) 1;
+}
+
+// ─── Responsive Media Query Helpers ─────────────────────────
+@mixin mobile { @media (max-width: #{$bp-tablet - 1px}) { @content; } }
+@mixin tablet { @media (min-width: $bp-tablet) and (max-width: #{$bp-desktop - 1px}) { @content; } }
+@mixin desktop { @media (min-width: $bp-desktop) { @content; } }

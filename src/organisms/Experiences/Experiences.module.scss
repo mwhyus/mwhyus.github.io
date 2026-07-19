@@ -1,137 +1,229 @@
+// ============================================================
+// Experiences.module.scss — Vertical Timeline Layout
+// DESIGN.md §2: glass-card mixin, amber connector line
+// Updated: Timeline layout, animated line, alternating cards
+// ============================================================
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
 .section {
-  padding: 7rem 0;
-  position: relative;
-  background: linear-gradient(180deg, transparent 0%, rgba(13, 17, 32, 0.6) 50%, transparent 100%);
+  @include section-padding;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(13, 17, 32, 0.5) 50%,
+    transparent 100%
+  );
 }
 
 .container {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 2rem;
+  @include container;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+// ─── Timeline Container ───────────────────────────────────────
+.timeline {
+  position: relative;
+  display:  flex;
+  flex-direction: column;
+  gap:      3rem;
+  padding:  0 0 2rem;
+}
 
-  /* Mobile Layout: Native Horizontal Scroll List */
-  @media (max-width: 768px) {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 1rem;
-    padding-bottom: 2rem;
-    margin-top: 1rem;
-    
-    /* Hide scrollbar for a cleaner premium look */
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    &::-webkit-scrollbar {
-      display: none;
-    }
+// ─── Animated Connector Line ──────────────────────────────────
+.connectorLine {
+  position:         absolute;
+  left:             50%;
+  top:              0;
+  bottom:           0;
+  width:            2px;
+  transform:        translateX(-50%);
+  background:       linear-gradient(
+    180deg,
+    rgba(218, 165, 32, 0.7),
+    rgba(212, 175, 55, 0.3),
+    transparent
+  );
+  border-radius:    1px;
+  pointer-events:   none;
+
+  @include mobile {
+    left: 24px;
+    transform: none;
   }
 }
 
+// ─── Card Wrapper (alternating left/right) ────────────────────
 .cardWrapper {
   perspective: 1000px;
-  display: flex;
-  flex-direction: column;
+  position:    relative;
+  width:       calc(50% - 2rem);
+  display:     flex;
 
-  @media (max-width: 768px) {
-    scroll-snap-align: center;
-    flex: 0 0 85%; /* 85% width so the next card peeks in naturally */
-    max-width: 340px;
+  // Left cards sit on the left side
+  &.left {
+    align-self: flex-start;
+    margin-right: auto;
+  }
+
+  // Right cards sit on the right side
+  &.right {
+    align-self: flex-end;
+    margin-left: auto;
+  }
+
+  @include mobile {
+    width:     100%;
+    margin-left: 56px !important;
+    margin-right: 0 !important;
+    align-self: flex-start !important;
   }
 }
 
+// ─── Timeline Dot ─────────────────────────────────────────────
+.dot {
+  position:  absolute;
+  top:       1.75rem;
+  z-index:   1;
+  display:   flex;
+  align-items: center;
+  justify-content: center;
+
+  // Dot positioning: right edge of left cards, left edge of right cards
+  .left  & { right: -2.5rem; }
+  .right & { left:  -2.5rem; }
+
+  @include mobile {
+    left:  -39px !important; // Align center of 14px dot with the 24px line (56px margin - 39px offset = 17px left edge, + 7px half-width = 24px center)
+    right: auto    !important;
+  }
+}
+
+.dotInner {
+  width:         14px;
+  height:        14px;
+  border-radius: 50%;
+  background:    linear-gradient(135deg, #DAA520, #FFE074);
+  box-shadow:    0 0 0 4px rgba(218, 165, 32, 0.15),
+                 0 0 12px rgba(218, 165, 32, 0.4);
+}
+
+// ─── Card ─────────────────────────────────────────────────────
 .card {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+  @include glass-card(false);
+  display:         flex;
+  flex-direction:  column;
   text-decoration: none;
-  color: inherit;
-  cursor: pointer;
-  background: var(--glass-fill);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: var(--glass-border);
-  border-radius: var(--glass-radius-card);
-  box-shadow: var(--glass-shadow);
-  transition: border 0.3s ease, box-shadow 0.3s ease;
+  color:           inherit;
+  cursor:          pointer;
+  width:           100%;
+  position:        relative;
+  overflow:        hidden;
+  transition:      border-color 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
-    border: var(--glass-border-hover);
-    box-shadow: var(--glass-shadow-hover);
+    border-color: rgba(218, 165, 32, 0.35);
+    box-shadow: var(--glass-shadow-hover),
+                0 0 24px rgba(218, 165, 32, 0.07);
   }
+
+  &:focus-visible { @include focus-ring; }
 }
 
+// ─── Glow Highlight ───────────────────────────────────────────
+.glow {
+  position:       absolute;
+  inset:          0;
+  border-radius:  inherit;
+  pointer-events: none;
+  opacity:        0;
+  transition:     opacity 0.3s ease;
+  background:     radial-gradient(
+    160px circle at calc(var(--glow-x)) calc(var(--glow-y)),
+    rgba(218, 165, 32, 0.1),
+    transparent 70%
+  );
+
+  .card:hover & { opacity: 1; }
+}
+
+// ─── Card Inner ───────────────────────────────────────────────
 .cardInner {
-  padding: 2rem;
-  display: flex;
+  padding:        1.75rem;
+  display:        flex;
   flex-direction: column;
-  flex: 1;
-  gap: 1rem;
+  gap:            0.875rem;
+}
+
+.cardHeader {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+  gap:             1rem;
 }
 
 .iconWrapper {
-  font-size: 2.2rem;
-  color: var(--color-accent-amber);
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
+  font-size:       1.6rem;
+  color:           var(--color-accent-amber);
+  width:           48px;
+  height:          48px;
+  display:         flex;
+  align-items:     center;
   justify-content: center;
-  border-radius: 14px;
-  background: rgba(218, 165, 32, 0.12);
-  border: 1px solid rgba(218, 165, 32, 0.2);
+  border-radius:   12px;
+  background:      rgba(218, 165, 32, 0.12);
+  border:          1px solid rgba(218, 165, 32, 0.2);
+  flex-shrink:     0;
+}
+
+.period {
+  font-size:      0.75rem;
+  font-weight:    600;
+  color:          var(--color-text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .title {
   font-family: var(--font-heading);
-  font-size: 1.2rem;
+  font-size:   1.15rem;
   font-weight: 700;
-  color: var(--color-text-heading);
+  color:       var(--color-text-heading);
 }
 
 .description {
-  color: var(--color-text-body);
-  font-size: 0.925rem;
-  line-height: 1.7;
-  flex: 1;
+  color:       var(--color-text-body);
+  font-size:   0.9rem;
+  line-height: 1.75;
 }
 
 .tags {
-  display: flex;
+  display:   flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap:       0.4rem;
 }
 
 .tag {
-  font-size: 0.72rem;
-  font-weight: 600;
+  font-size:      0.7rem;
+  font-weight:    600;
   letter-spacing: 0.04em;
-  padding: 0.25rem 0.65rem;
-  border-radius: 20px;
-  background: rgba(218, 165, 32, 0.1);
-  border: 1px solid rgba(218, 165, 32, 0.25);
-  color: var(--color-accent-amber);
+  padding:        0.2rem 0.6rem;
+  border-radius:  20px;
+  background:     rgba(218, 165, 32, 0.1);
+  border:         1px solid rgba(218, 165, 32, 0.22);
+  color:          var(--color-accent-amber);
 }
 
 .link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-accent-amber);
-  text-decoration: none;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.2s ease;
-  width: fit-content;
+  display:         inline-flex;
+  align-items:     center;
+  gap:             0.4rem;
+  font-size:       0.875rem;
+  font-weight:     600;
+  color:           var(--color-accent-amber);
+  width:           fit-content;
+  border-bottom:   1px solid transparent;
+  padding-bottom:  2px;
+  transition:      border-color 0.2s ease;
 
-  &:hover {
-    border-color: var(--color-accent-amber);
-  }
+  .card:hover & { border-color: var(--color-accent-amber); }
 }

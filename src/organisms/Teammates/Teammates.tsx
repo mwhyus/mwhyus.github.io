@@ -1,10 +1,13 @@
 // ============================================================
 // Teammates.tsx — Organism: Previous Teammates carousel
+// DESIGN.md §3: Glass/Tilt/Stagger — consistent with Projects design language
 // ============================================================
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri'
 import { SectionTitle } from '../../atoms/SectionTitle'
+import { useGlassTilt } from '../../hooks/useGlassTilt'
+import { entranceTransition, fadeInUp } from '../../hooks/motionVariants'
 import styles from './Teammates.module.scss'
 
 interface Teammate {
@@ -76,39 +79,87 @@ const TEAMMATES: Teammate[] = [
   },
 ]
 
-const TeammateCard: React.FC<{ tm: Teammate; isMobile?: boolean }> = React.memo(({ tm, isMobile }) => {
-  const cardClassName = isMobile ? `${styles.card} ${styles.mobileCard}` : styles.card
-  
+const TeammateCard: React.FC<{ tm: Teammate; isMobile?: boolean; index?: number }> = React.memo(({ tm, isMobile, index = 0 }) => {
+  const { rotateX, rotateY, glowX, glowY, handleMouseMove, handleMouseLeave, cardRef } = useGlassTilt()
+
+  if (isMobile) {
+    return (
+      <article className={`${styles.card} ${styles.mobileCard}`}>
+        <div className={styles.photoWrapper}>
+          <picture>
+            {tm.photoMobile && (
+              <source media="(max-width: 768px)" srcSet={tm.photoMobile} />
+            )}
+            <img
+              src={tm.photo}
+              alt={`${tm.name} — ${tm.role}`}
+              className={styles.photo}
+              style={{ objectPosition: tm.objectPosition || 'center' }}
+              onError={(e) => {
+                const img = e.currentTarget
+                img.style.display = 'none'
+                img.parentElement!.classList.add(styles.photoFallback)
+              }}
+            />
+          </picture>
+        </div>
+        <div className={styles.info}>
+          <div className={styles.project}>{tm.project}</div>
+          <h3 className={styles.name}>{tm.name}</h3>
+          <div className={styles.role}>{tm.role}</div>
+          <p className={styles.desc}>{tm.description}</p>
+        </div>
+      </article>
+    )
+  }
+
   return (
-    <motion.article
-      className={cardClassName}
-      whileHover={isMobile ? undefined : { scale: 1.02, y: -4 }}
+    <motion.div
+      className={styles.cardWrapper}
+      variants={fadeInUp}
+      initial="hidden"
+      animate="show"
+      transition={{ ...entranceTransition, delay: index * 0.08 }}
     >
-      <div className={styles.photoWrapper}>
-        <picture>
-          {tm.photoMobile && (
-            <source media="(max-width: 768px)" srcSet={tm.photoMobile} />
-          )}
-          <img
-            src={tm.photo}
-            alt={`${tm.name} — ${tm.role}`}
-            className={styles.photo}
-            style={{ objectPosition: tm.objectPosition || 'center' }}
-            onError={(e) => {
-              const img = e.currentTarget
-              img.style.display = 'none'
-              img.parentElement!.classList.add(styles.photoFallback)
-            }}
-          />
-        </picture>
-      </div>
-      <div className={styles.info}>
-        <div className={styles.project}>{tm.project}</div>
-        <h3 className={styles.name}>{tm.name}</h3>
-        <div className={styles.role}>{tm.role}</div>
-        <p className={styles.desc}>{tm.description}</p>
-      </div>
-    </motion.article>
+      <motion.article
+        ref={cardRef}
+        className={styles.card}
+        style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        {/* Glow highlight */}
+        <motion.div
+          className={styles.glow}
+          style={{ '--glow-x': glowX, '--glow-y': glowY } as React.CSSProperties}
+          aria-hidden="true"
+        />
+        <div className={styles.photoWrapper}>
+          <picture>
+            {tm.photoMobile && (
+              <source media="(max-width: 768px)" srcSet={tm.photoMobile} />
+            )}
+            <img
+              src={tm.photo}
+              alt={`${tm.name} — ${tm.role}`}
+              className={styles.photo}
+              style={{ objectPosition: tm.objectPosition || 'center' }}
+              onError={(e) => {
+                const img = e.currentTarget
+                img.style.display = 'none'
+                img.parentElement!.classList.add(styles.photoFallback)
+              }}
+            />
+          </picture>
+        </div>
+        <div className={styles.info} style={{ transform: 'translateZ(16px)' }}>
+          <div className={styles.project}>{tm.project}</div>
+          <h3 className={styles.name}>{tm.name}</h3>
+          <div className={styles.role}>{tm.role}</div>
+          <p className={styles.desc}>{tm.description}</p>
+        </div>
+      </motion.article>
+    </motion.div>
   )
 })
 
@@ -162,13 +213,13 @@ export const Teammates: React.FC = React.memo(() => {
                   key={currentIndex}
                   className={styles.slide}
                   custom={direction}
-                  initial={{ opacity: 0, x: direction * 100 }}
+                  initial={{ opacity: 0, x: direction * 80 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -direction * 100 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                  exit={{ opacity: 0, x: -direction * 80 }}
+                  transition={entranceTransition}
                 >
-                  {visible.map((tm) => (
-                    <TeammateCard key={tm.name} tm={tm} />
+                  {visible.map((tm, i) => (
+                    <TeammateCard key={tm.name} tm={tm} index={i} />
                   ))}
                 </motion.div>
               </AnimatePresence>

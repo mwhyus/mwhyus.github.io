@@ -2,6 +2,7 @@
 // _globals.scss — Base Reset + Typography + Scrollbar
 // ============================================================
 @use 'variables' as *;
+@use 'mixins' as *;
 
 *,
 *::before,
@@ -35,6 +36,20 @@
   --font-body:    #{$font-body};
   --nav-height:   #{$nav-height};
   --max-width:    #{$max-width};
+
+  // Z-Index Layering (DESIGN.md §5)
+  --z-3d-bg:   #{$z-3d-bg};
+  --z-content: #{$z-content};
+  --z-nav:     #{$z-nav};
+  --z-modal:   #{$z-modal};
+
+  // Gradient Colors
+  --gradient-amber: #{$gradient-amber};
+  --gradient-gold:  #{$gradient-gold};
+  --gradient-warm:  #{$gradient-warm};
+
+  // Section gap
+  --section-gap: #{$spacing-xxl};
 }
 
 html {
@@ -46,7 +61,7 @@ body {
   font-family: $font-body;
   background-color: $color-bg-deep;
   color: $color-text-body;
-  line-height: 1.6;
+  line-height: 1.65;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -58,6 +73,7 @@ h1, h2, h3, h4, h5, h6 {
   color: $color-text-heading;
   line-height: 1.2;
   font-weight: 600;
+  letter-spacing: -0.03em;
 }
 
 a {
@@ -108,5 +124,21 @@ canvas {
 .container {
   max-width: $max-width;
   margin: 0 auto;
-  padding: 0 $spacing-md;
+  padding: 0 $spacing-lg;
+}
+
+// ============================================================
+// Accessibility: Reduced Motion (DESIGN.md §3 — Mandatory)
+// Disables all non-essential transitions and animations for
+// users who have enabled prefers-reduced-motion in their OS.
+// ============================================================
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration:   0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration:  0.01ms !important;
+    scroll-behavior:      auto !important;
+  }
 }

@@ -1,0 +1,84 @@
+// ============================================================
+// TabFilter.module.scss — Glassmorphic Floating Chip Styles
+// DESIGN.md §2: glass-card mixin, amber accent
+// User feedback: horizontal-scroll on mobile, centered on desktop
+// ============================================================
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// ─── Track (row of chips) ────────────────────────────────────
+.track {
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  gap:              0.5rem;
+  flex-wrap:        nowrap;
+  margin-bottom:    2.5rem;
+
+  // Horizontal scroll on mobile — no scroll-bar visible
+  @include mobile {
+    justify-content:    flex-start;
+    overflow-x:         auto;
+    padding-bottom:     0.25rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width:    none;
+    &::-webkit-scrollbar { display: none; }
+  }
+}
+
+// ─── Individual Chip ─────────────────────────────────────────
+.chip {
+  position:      relative;
+  display:       inline-flex;
+  align-items:   center;
+  justify-content: center;
+  padding:       0.45rem 1.1rem;
+  border-radius: 100px; // pill shape
+  cursor:        pointer;
+  border:        1px solid rgba(255, 255, 255, 0.12);
+  background:    rgba(255, 255, 255, 0.05);
+  color:         var(--color-text-muted);
+  font-family:   var(--font-heading);
+  font-size:     0.875rem;
+  font-weight:   500;
+  letter-spacing: 0.01em;
+  white-space:   nowrap;
+  flex-shrink:   0;
+  overflow:      hidden;
+  transition:    color 0.2s ease, border-color 0.2s ease;
+
+  &:hover:not(.active) {
+    color:         var(--color-text-heading);
+    border-color:  rgba(218, 165, 32, 0.25);
+    background:    rgba(255, 255, 255, 0.08);
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &.active {
+    color:        var(--color-text-heading);
+    border-color: transparent; // Let the sliding pill background handle the visual border/depth
+  }
+}
+
+// ─── Sliding Pill (layoutId background) ─────────────────────
+.pill {
+  position:      absolute;
+  inset:         0;
+  border-radius: inherit;
+  background:    rgba(218, 165, 32, 0.15); // Solid semi-transparent amber
+  border:        1px solid rgba(218, 165, 32, 0.35); // Stroke on the moving pill itself
+  box-shadow:    0 4px 12px rgba(0, 0, 0, 0.3),
+                 inset 0 1px 0 rgba(255, 255, 255, 0.15); // Light catcher
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index:       0;
+}
+
+// ─── Label (above pill layer) ────────────────────────────────
+.label {
+  position: relative;
+  z-index:  1;
+}

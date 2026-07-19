@@ -1,14 +1,18 @@
 // ============================================================
-// SectionTitle.tsx — Atom: Section heading with gold accent
+// SectionTitle.tsx — Atom: Section heading with animated text + accent line
+// DESIGN.md §3: Spring physics, entranceTransition
+// Updated: Uses AnimatedText for character reveal, wider accent line
 // ============================================================
 import React from 'react'
 import { motion } from 'framer-motion'
+import { AnimatedText } from '../AnimatedText'
+import { entranceTransition, fadeInUp } from '../../hooks/motionVariants'
 import styles from './SectionTitle.module.scss'
 
 interface SectionTitleProps {
-  children: React.ReactNode
-  subtitle?: string
-  align?: 'left' | 'center'
+  children:   string
+  subtitle?:  string
+  align?:     'left' | 'center'
 }
 
 export const SectionTitle: React.FC<SectionTitleProps> = React.memo(({
@@ -18,23 +22,28 @@ export const SectionTitle: React.FC<SectionTitleProps> = React.memo(({
 }) => {
   return (
     <div className={`${styles.wrapper} ${styles[align]}`}>
-      <motion.h2
-        className={styles.title}
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-60px' }}
-        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-      >
-        {children}
-        <span className={styles.accent} aria-hidden="true" />
-      </motion.h2>
+      <h2 className={styles.title} aria-label={children}>
+        <AnimatedText splitBy="words" delay={0}>
+          {children}
+        </AnimatedText>
+        <motion.span
+          className={styles.accent}
+          aria-hidden="true"
+          initial={{ scaleX: 0, opacity: 0 }}
+          whileInView={{ scaleX: 1, opacity: 1 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ ...entranceTransition, delay: 0.2 }}
+          style={{ transformOrigin: align === 'center' ? 'center' : 'left' }}
+        />
+      </h2>
       {subtitle && (
         <motion.p
           className={styles.subtitle}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="show"
           viewport={{ once: true, margin: '-60px' }}
-          transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.1 }}
+          transition={{ ...entranceTransition, delay: 0.3 }}
         >
           {subtitle}
         </motion.p>

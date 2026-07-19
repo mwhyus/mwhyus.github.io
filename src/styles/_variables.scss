@@ -1,6 +1,7 @@
 // ============================================================
 // _variables.scss — Golden Hour Ambiance Design Tokens
 // Source of Truth: .agents/design/DESIGN.md
+// Updated: Added motion presets §3, z-index §5, gradient tokens
 // ============================================================
 
 // --- Color Palette ---
@@ -15,7 +16,7 @@ $color-text-muted:     rgba(255, 255, 255, 0.4);  // Extra muted
 // --- Glass Protocol (DESIGN.md §3 — Strict Enforcement) ---
 $glass-fill:           rgba(255, 255, 255, 0.08);
 $glass-fill-hover:     rgba(255, 255, 255, 0.12);
-$glass-blur:           20px;
+$glass-blur:           24px;
 $glass-border:         1px solid rgba(255, 255, 255, 0.15);
 $glass-border-hover:   1px solid rgba(218, 165, 32, 0.35);
 $glass-shadow:         0 8px 32px 0 rgba(31, 38, 135, 0.2);
@@ -27,21 +28,38 @@ $glass-radius-btn:     8px;
 $font-heading:         'DM Sans', sans-serif;
 $font-body:            'Lato', sans-serif;
 
-// --- Spacing ---
-$spacing-xs:    0.5rem;
-$spacing-sm:    1rem;
-$spacing-md:    2rem;
-$spacing-lg:    4rem;
-$spacing-xl:    6rem;
+// --- Spacing (8-Point Grid) ---
+$spacing-xs:    0.5rem;   // 8px
+$spacing-sm:    1rem;     // 16px
+$spacing-md:    1.5rem;   // 24px
+$spacing-lg:    2rem;     // 32px
+$spacing-xl:    4rem;     // 64px
+$spacing-xxl:   7rem;     // 112px (Section gaps)
 
 // --- Layout ---
 $max-width:        1200px;
 $nav-height:       70px;
 
-// --- Animation (DESIGN.md §4) ---
-$spring-stiffness: 300;
-$spring-damping:   20;
-$transition-base:  all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+// --- Animation (DESIGN.md §3 — Motion Style Guide) ---
+// entrance: { type: "spring", stiffness: 80, damping: 20, mass: 1 }
+$spring-entrance-stiffness:    80;
+$spring-entrance-damping:      20;
+$spring-entrance-mass:         1;
+// interaction: { type: "spring", stiffness: 400, damping: 25 }
+$spring-interaction-stiffness: 400;
+$spring-interaction-damping:   25;
+$transition-base:              all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+
+// --- Z-Index Layering (DESIGN.md §5) ---
+$z-3d-bg:        -1;  // 3D Background Canvas
+$z-content:       0;  // Global Layout/Content
+$z-nav:          10;  // Navbar / Fixed overlays
+$z-modal:       100;  // Modals / High-priority interaction
+
+// --- Gradient Colors ---
+$gradient-amber:  #DAA520;
+$gradient-gold:   #FFE074;
+$gradient-warm:   #FFF0A0;
 
 // --- Breakpoints ---
 $bp-mobile:     480px;

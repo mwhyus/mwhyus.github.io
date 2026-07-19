@@ -4,6 +4,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { RiLinkedinBoxLine, RiGithubLine, RiGitlabLine } from 'react-icons/ri'
+import { interactionTransition } from '../../hooks/motionVariants'
 import styles from './Footer.module.scss'
 
 const SOCIAL_ICONS = [
@@ -35,8 +36,9 @@ export const Footer: React.FC = React.memo(() => {
               rel="noopener noreferrer"
               className={styles.socialIcon}
               aria-label={s.label}
-              whileHover={{ scale: 1.2, color: '#DAA520' }}
-              transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+              whileHover={{ scale: 1.15, y: -4, color: '#DAA520' }}
+              whileTap={{ scale: 0.95 }}
+              transition={interactionTransition}
             >
               {s.icon}
             </motion.a>

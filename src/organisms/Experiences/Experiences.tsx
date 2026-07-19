@@ -1,56 +1,75 @@
 // ============================================================
-// Experiences.tsx — Organism: Tech & Operation Experiences
+// Experiences.tsx — Organism: Vertical Timeline of Experiences
+// DESIGN.md §3: spring entrance, stagger, reduced motion
+// Updated: Vertical timeline layout, animated connector line
 // ============================================================
 import React from 'react'
 import { motion } from 'framer-motion'
 import { RiExternalLinkLine, RiComputerLine, RiSmartphoneLine, RiBarChart2Line } from 'react-icons/ri'
 import { SectionTitle } from '../../atoms/SectionTitle'
 import { useGlassTilt } from '../../hooks/useGlassTilt'
+import { entranceTransition, fadeInUp } from '../../hooks/motionVariants'
 import styles from './Experiences.module.scss'
 
 interface ExperienceItem {
-  icon: React.ReactNode
-  title: string
+  icon:        React.ReactNode
+  title:       string
   description: string
-  link: string
-  tags: string[]
+  link:        string
+  tags:        string[]
+  period:      string
 }
 
 const EXPERIENCES: ExperienceItem[] = [
   {
-    icon: <RiComputerLine />,
-    title: 'Web Development',
+    icon:        <RiComputerLine />,
+    title:       'Web Development',
     description: 'Building web applications using HTML, CSS, JavaScript, and React framework. Focused on clean architecture and premium UI.',
-    link: 'https://drive.google.com/drive/folders/1eon5gSELTBj3yrmSbL7aYn3bHlD_8iOm?usp=sharing',
-    tags: ['React', 'HTML/CSS', 'JavaScript'],
+    link:        'https://drive.google.com/drive/folders/1eon5gSELTBj3yrmSbL7aYn3bHlD_8iOm?usp=sharing',
+    tags:        ['React', 'HTML/CSS', 'JavaScript'],
+    period:      '2021 – Present',
   },
   {
-    icon: <RiSmartphoneLine />,
-    title: 'Mobile Development',
+    icon:        <RiSmartphoneLine />,
+    title:       'Mobile Development',
     description: 'Experience building cross-platform mobile applications using React Native. From concept to production-ready apps.',
-    link: 'https://drive.google.com/drive/folders/1BBJDTmQ8wjjCQD8Gmdxjfdiury-Qlxvj?usp=sharing',
-    tags: ['React Native', 'Mobile', 'Cross-Platform'],
+    link:        'https://drive.google.com/drive/folders/1BBJDTmQ8wjjCQD8Gmdxjfdiury-Qlxvj?usp=sharing',
+    tags:        ['React Native', 'Mobile', 'Cross-Platform'],
+    period:      '2022 – Present',
   },
   {
-    icon: <RiBarChart2Line />,
-    title: 'Project Management',
+    icon:        <RiBarChart2Line />,
+    title:       'Project Management',
     description: 'Led international youth organization projects, managing cross-cultural teams from Team Member to Executive Board level.',
-    link: 'https://drive.google.com/drive/folders/1VFHGBzI83wlfsw3t_Jykmzic8z426QlS?usp=sharing',
-    tags: ['Agile', 'Leadership', 'Strategy'],
+    link:        'https://drive.google.com/drive/folders/1VFHGBzI83wlfsw3t_Jykmzic8z426QlS?usp=sharing',
+    tags:        ['Agile', 'Leadership', 'Strategy'],
+    period:      '2016 – 2019',
   },
 ]
 
-const ExperienceCard: React.FC<{ item: ExperienceItem; index: number }> = React.memo(({ item, index }) => {
-  const { rotateX, rotateY, handleMouseMove, handleMouseLeave, cardRef } = useGlassTilt<HTMLAnchorElement>()
+// ─── Experience Card (with tilt) ─────────────────────────────
+const ExperienceCard: React.FC<{
+  item:  ExperienceItem
+  index: number
+  side:  'left' | 'right'
+}> = React.memo(({ item, index, side }) => {
+  const { rotateX, rotateY, glowX, glowY, handleMouseMove, handleMouseLeave, cardRef } =
+    useGlassTilt<HTMLAnchorElement>()
 
   return (
     <motion.div
-      className={styles.cardWrapper}
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      className={`${styles.cardWrapper} ${styles[side]}`}
+      variants={fadeInUp}
+      initial="hidden"
+      whileInView="show"
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ type: 'spring', stiffness: 300, damping: 20, delay: index * 0.1 }}
+      transition={{ ...entranceTransition, delay: index * 0.12 }}
     >
+      {/* Timeline dot */}
+      <div className={styles.dot} aria-hidden="true">
+        <div className={styles.dotInner} />
+      </div>
+
       <motion.a
         ref={cardRef}
         className={styles.card}
@@ -61,9 +80,17 @@ const ExperienceCard: React.FC<{ item: ExperienceItem; index: number }> = React.
         target="_blank"
         rel="noopener noreferrer"
       >
-        <div className={styles.cardInner} style={{ transform: 'translateZ(20px)' }}>
-          <div className={styles.iconWrapper}>
-            {item.icon}
+        {/* Glow */}
+        <motion.div
+          className={styles.glow}
+          style={{ '--glow-x': glowX, '--glow-y': glowY } as React.CSSProperties}
+          aria-hidden="true"
+        />
+
+        <div className={styles.cardInner} style={{ transform: 'translateZ(16px)' }}>
+          <div className={styles.cardHeader}>
+            <div className={styles.iconWrapper}>{item.icon}</div>
+            <span className={styles.period}>{item.period}</span>
           </div>
           <h3 className={styles.title}>{item.title}</h3>
           <p className={styles.description}>{item.description}</p>
@@ -81,9 +108,9 @@ const ExperienceCard: React.FC<{ item: ExperienceItem; index: number }> = React.
     </motion.div>
   )
 })
-
 ExperienceCard.displayName = 'ExperienceCard'
 
+// ─── Main Component ───────────────────────────────────────────
 export const Experiences: React.FC = React.memo(() => {
   return (
     <section id="experiences" className={styles.section} aria-label="Experiences section">
@@ -91,14 +118,30 @@ export const Experiences: React.FC = React.memo(() => {
         <SectionTitle subtitle="My journey across tech and operations.">
           Experiences
         </SectionTitle>
-        <div className={styles.grid}>
+
+        <div className={styles.timeline}>
+          {/* Animated connector line */}
+          <motion.div
+            className={styles.connectorLine}
+            aria-hidden="true"
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ ...entranceTransition, duration: 1.2 }}
+            style={{ transformOrigin: 'top center' }}
+          />
+
           {EXPERIENCES.map((item, i) => (
-            <ExperienceCard key={item.title} item={item} index={i} />
+            <ExperienceCard
+              key={item.title}
+              item={item}
+              index={i}
+              side={i % 2 === 0 ? 'left' : 'right'}
+            />
           ))}
         </div>
       </div>
     </section>
   )
 })
-
 Experiences.displayName = 'Experiences'
