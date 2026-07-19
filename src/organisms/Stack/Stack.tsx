@@ -11,7 +11,6 @@ import {
 import {
   SiTypescript, SiJest, SiStorybook, SiJenkins, SiFlutter, SiDart
 } from 'react-icons/si'
-import { TbBrandMeta } from 'react-icons/tb'
 import { SectionTitle } from '../../atoms/SectionTitle'
 import { useGlassTilt } from '../../hooks/useGlassTilt'
 import styles from './Stack.module.scss'
@@ -19,6 +18,22 @@ import styles from './Stack.module.scss'
 const AntigravityLogo = () => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '1em', height: '1em' }}>
     <path d="M12 2C12 7.52 16.48 12 22 12C16.48 12 12 16.48 12 22C12 16.48 7.52 12 2 12C7.52 12 12 7.52 12 2Z" fill="currentColor" />
+  </svg>
+)
+
+const FlowLogo = () => (
+  <svg viewBox="0 0 225 252" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '1em', height: '1em' }}>
+    <g fill="currentColor">
+      <path opacity=".7" d="M224.74 109l-84.11-84.1h84.11z"/>
+      <path opacity=".7" d="M81.72 0h47.68l36.44 36.43H81.72z"/>
+      <path opacity=".9" d="M84.45 84.12L.34 0h101.13v84.11zm73.89 84.1l84.11 84.11h-84.11z"/>
+      <path opacity=".7" d="M101.47 168.23l-84.1-84.12h84.11v84.11zm90.58-42.57L125 58.57h67.08zm7.84 118.84l-76.28-76.27h76.28z"/>
+      <path opacity=".9" d="M101.47 67l-67-67h67z"/>
+      <path opacity=".8" d="M123.95 168.22l84.11 84.11h-84.11z"/>
+      <path opacity=".7" d="M209.08 201.8l-84-84h84z"/>
+      <path opacity=".9" d="M125 58.57l83.09 83.09H125z"/>
+      <path opacity=".7" d="M101.47 252L0 150.51h101.47V252z"/>
+    </g>
   </svg>
 )
 
@@ -51,11 +66,11 @@ const SKILL_CATEGORIES: SkillCategory[] = [
       { icon: <RiReactjsLine />, name: 'React', level: 'Advanced', color: '#61DAFB' },
       { icon: <RiReactjsLine />, name: 'React Native', level: 'Advanced', color: '#61DAFB' },
       { icon: <SiFlutter />, name: 'Flutter', level: 'Intermediate', color: '#02569B' },
-      { icon: <RiJavascriptLine />, name: 'JavaScript', level: 'Intermediate', color: '#F7DF1E' },
-      { icon: <SiTypescript />, name: 'TypeScript', level: 'Intermediate', color: '#3178C6' },
+      { icon: <RiJavascriptLine />, name: 'JavaScript', level: 'Advanced', color: '#F7DF1E' },
+      { icon: <SiTypescript />, name: 'TypeScript', level: 'Advanced', color: '#3178C6' },
       { icon: <SiDart />, name: 'Dart', level: 'Intermediate', color: '#0175C2' },
       { icon: <SiJest />, name: 'Jest', level: 'Intermediate', color: '#C21325' },
-      { icon: <TbBrandMeta />, name: 'Flow', level: 'Intermediate', color: '#E66F00' },
+      { icon: <FlowLogo />, name: 'Flow', level: 'Intermediate', color: '#E66F00' },
       { icon: <SiJenkins />, name: 'Jenkins', level: 'Intermediate', color: '#D33834' },
       { icon: <SiStorybook />, name: 'Storybook', level: 'Intermediate', color: '#FF4785' },
     ],
