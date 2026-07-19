@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { BackgroundCanvas } from './three/BackgroundCanvas'
+import { DesktopInviteModal } from './organisms/DesktopInviteModal'
 import { Navbar }      from './organisms/Navbar'
 import { Hero }        from './organisms/Hero'
 import { About }       from './organisms/About'
@@ -28,6 +29,7 @@ const App: React.FC = () => {
 
   return (
     <>
+      <DesktopInviteModal isMobile={isMobile} />
       {}
       <BackgroundCanvas isMobile={isMobile} />
 

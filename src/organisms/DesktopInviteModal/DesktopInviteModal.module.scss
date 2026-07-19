@@ -1,0 +1,52 @@
+@use '../../styles/mixins' as *;
+@use '../../styles/variables' as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.modal {
+  @include glass-card;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 90vw;
+  max-width: 400px;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 16px;
+
+  h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: $color-text-heading;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: $color-text-body;
+  }
+}
+
+.dismissButton {
+  background: $color-accent-amber;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  align-self: center;
+  width: 100%;
+}
