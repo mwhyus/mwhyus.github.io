@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion'
 import { RiMenuLine, RiCloseLine } from 'react-icons/ri'
-import { entranceTransition, interactionTransition } from '../../hooks/motionVariants'
+import { entranceTransition, snappyTransition } from '../../hooks/motionVariants'
 import styles from './Navbar.module.scss'
 
 const NAV_LINKS = [
@@ -19,21 +19,30 @@ export const Navbar: React.FC = React.memo(() => {
   const [mobileOpen, setMobileOpen]   = useState(false)
   const [activeSection, setActiveSection] = useState('home')
 
+  const isNavClickRef = React.useRef(false)
+  const navClickTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
+
   const { scrollY } = useScroll()
 
   useMotionValueEvent(scrollY, 'change', (latest) => {
     setScrolled(latest > 60)
+    if (!isNavClickRef.current && latest < 100) {
+      setActiveSection('home')
+    }
   })
 
   useEffect(() => {
     const sections = NAV_LINKS.map(l => l.href.slice(1))
     const observer = new IntersectionObserver(
       entries => {
+        if (isNavClickRef.current) return
         entries.forEach(entry => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id)
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id)
+          }
         })
       },
-      { threshold: 0.4 }
+      { threshold: 0.35, rootMargin: '-10% 0px -30% 0px' }
     )
     sections.forEach(id => {
       const el = document.getElementById(id)
@@ -43,10 +52,24 @@ export const Navbar: React.FC = React.memo(() => {
   }, [])
 
   const handleNavClick = useCallback((href: string) => {
+    const targetId = href.slice(1)
+    
+    // Lock scroll tracking so intermediate sections don't override activeSection during smooth scroll
+    isNavClickRef.current = true
+    if (navClickTimerRef.current) clearTimeout(navClickTimerRef.current)
+
+    setActiveSection(targetId)
     setMobileOpen(false)
-    setTimeout(() => {
-      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
-    }, 150)
+
+    const element = document.querySelector(href)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+
+    // Unlock scroll tracking after smooth scroll completes (~850ms)
+    navClickTimerRef.current = setTimeout(() => {
+      isNavClickRef.current = false
+    }, 850)
   }, [])
 
   return (
@@ -59,7 +82,7 @@ export const Navbar: React.FC = React.memo(() => {
       aria-label="Main navigation"
     >
       <div className={styles.inner}>
-        {}
+        {/* Logo */}
         <a
           href="#home"
           className={styles.logo}
@@ -69,7 +92,7 @@ export const Navbar: React.FC = React.memo(() => {
           mwhyus<span className={styles.dot}>.</span>
         </a>
 
-        {}
+        {/* Desktop Links */}
         <ul className={styles.links} role="list">
           {NAV_LINKS.map(({ label, href }) => {
             const isActive = activeSection === href.slice(1)
@@ -80,12 +103,12 @@ export const Navbar: React.FC = React.memo(() => {
                   className={`${styles.link} ${isActive ? styles.active : ''}`}
                   onClick={e => { e.preventDefault(); handleNavClick(href) }}
                 >
-                  {}
+                  {/* Moving active glass pill */}
                   {isActive && (
                     <motion.span
                       layoutId="navPill"
                       className={styles.navPill}
-                      transition={interactionTransition}
+                      transition={snappyTransition}
                     />
                   )}
                   <span className={styles.linkLabel}>{label}</span>

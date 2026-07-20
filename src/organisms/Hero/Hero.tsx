@@ -1,71 +1,67 @@
-import React, { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import React, { useRef, useCallback, useState, useEffect } from 'react'
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+  useMotionValue,
+  useSpring,
+} from 'framer-motion'
 import { Button } from '../../atoms/Button'
 import { CoconutTree } from '../../atoms/CoconutTree'
-import {
-  entranceTransition,
-  staggerContainer,
-  fadeInUp,
-  wordVariant,
-} from '../../hooks/motionVariants'
+import { entranceTransition, staggerContainer, wordVariant } from '../../hooks/motionVariants'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import styles from './Hero.module.scss'
 
-const TYPED_ROLES = [
+const ROLES = [
   'Frontend Developer',
-  'React Enthusiast',
-  'UI/UX Craftsman',
+  'React & TypeScript Architect',
+  'UI/UX Engineering Craftsman',
   'Tech Explorer',
 ]
 
-const Sparkles: React.FC = React.memo(() => (
-  <div className={styles.sparkles} aria-hidden="true">
-    {Array.from({ length: 6 }).map((_, i) => (
-      <span key={i} className={styles.sparkle} style={{ '--i': i } as React.CSSProperties} />
-    ))}
-  </div>
-))
-Sparkles.displayName = 'Sparkles'
-
 export const Hero: React.FC = React.memo(() => {
-  const [roleIndex, setRoleIndex] = React.useState(0)
-  const [displayed, setDisplayed] = React.useState('')
-  const [typing, setTyping] = React.useState(true)
+  const [roleIdx, setRoleIdx] = useState(0)
   const shouldReduce = useReducedMotion()
   const sectionRef = useRef<HTMLElement>(null)
 
+  /* Scroll parallax */
   const { scrollY } = useScroll()
-  const yBg = useTransform(scrollY, [0, 1000], [0, shouldReduce ? 0 : 150])
-  const yMid = useTransform(scrollY, [0, 1000], [0, shouldReduce ? 0 : 50])
-  const yFg = useTransform(scrollY, [0, 1000], [0, shouldReduce ? 0 : -100])
-  const opacityFade = useTransform(scrollY, [0, 400], [1, 0])
-
-  const scaleProfile = useTransform(scrollY, [0, 500], [1, shouldReduce ? 1 : 1.22])
-  const rotateProfile = useTransform(scrollY, [0, 500], [0, shouldReduce ? 0 : 6])
-
+  const yBg = useTransform(scrollY, [0, 1000], [0, shouldReduce ? 0 : 120])
+  const yMid = useTransform(scrollY, [0, 1000], [0, shouldReduce ? 0 : 25])
+  const yFg = useTransform(scrollY, [0, 1000], [0, shouldReduce ? 0 : -80])
+  const opacityFade = useTransform(scrollY, [0, 450], [1, 0])
   const opacityBg = useTransform(scrollY, [0, 500], [0.55, 0])
   const opacityFg = useTransform(scrollY, [0, 400], [0.85, 0])
 
-  React.useEffect(() => {
-    const role = TYPED_ROLES[roleIndex]
-    let timeout: ReturnType<typeof setTimeout>
+  /* Spring-physics mouse tracking for 3D portrait tilt */
+  const rawMouseX = useMotionValue(0)
+  const rawMouseY = useMotionValue(0)
+  const springCfg = { stiffness: 110, damping: 26, mass: 0.8 }
+  const rotateY = useSpring(useTransform(rawMouseX, [-0.5, 0.5], [-8, 8]), springCfg)
+  const rotateX = useSpring(useTransform(rawMouseY, [-0.5, 0.5], [6, -6]), springCfg)
+  const glowOp = useSpring(useTransform(rawMouseX, [-0.5, 0.5], [0.2, 0.6]), { stiffness: 80, damping: 24 })
 
-    if (typing) {
-      if (displayed.length < role.length) {
-        timeout = setTimeout(() => setDisplayed(role.slice(0, displayed.length + 1)), 80)
-      } else {
-        timeout = setTimeout(() => setTyping(false), 2000)
-      }
-    } else {
-      if (displayed.length > 0) {
-        timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 40)
-      } else {
-        setRoleIndex(i => (i + 1) % TYPED_ROLES.length)
-        setTyping(true)
-      }
-    }
-    return () => clearTimeout(timeout)
-  }, [displayed, typing, roleIndex])
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (shouldReduce) return
+    const rect = sectionRef.current?.getBoundingClientRect()
+    if (!rect) return
+    const x = (e.clientX - rect.left) / rect.width - 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5
+    rawMouseX.set(x)
+    rawMouseY.set(y)
+  }, [rawMouseX, rawMouseY, shouldReduce])
+
+  const handleMouseLeave = useCallback(() => {
+    rawMouseX.set(0)
+    rawMouseY.set(0)
+  }, [rawMouseX, rawMouseY])
+
+  /* Role cycling interval */
+  useEffect(() => {
+    const timer = setInterval(() => setRoleIdx(i => (i + 1) % ROLES.length), 3400)
+    return () => clearInterval(timer)
+  }, [])
 
   const scrollToProjects = () =>
     document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' })
@@ -76,100 +72,80 @@ export const Hero: React.FC = React.memo(() => {
       ref={sectionRef}
       className={styles.hero}
       aria-label="Hero section"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
+      {/* ── Background Image & Overlay ── */}
       <motion.div className={styles.bgImage} style={{ y: yBg }} aria-hidden="true" />
       <div className={styles.bgOverlay} aria-hidden="true" />
 
+      {/* ── Background Palm Trees Layer ── */}
       <motion.div className={styles.layerBg} style={{ y: yBg, opacity: opacityBg }} aria-hidden="true">
         <CoconutTree className={`${styles.tree} ${styles.treeBgLeft}`} />
         <CoconutTree className={`${styles.tree} ${styles.treeBgRight}`} />
       </motion.div>
 
-      <motion.div className={styles.container} style={{ y: yMid, opacity: opacityFade }}>
-        <div className={styles.content}>
-          <motion.div
-            style={{
-              scale: scaleProfile,
-              rotate: rotateProfile,
-              transformStyle: 'preserve-3d',
-            }}
-          >
-            <motion.div
-              className={styles.profileFrame}
-              initial={{ scale: shouldReduce ? 1 : 0.75, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ ...entranceTransition, delay: 0.1 }}
-            >
-              <div className={styles.particleRing} aria-hidden="true">
-                {Array.from({ length: 12 }).map((_, i) => (
-                  <span
-                    key={i}
-                    className={styles.orbParticle}
-                    style={{ '--idx': i, '--total': 12 } as React.CSSProperties}
-                  />
-                ))}
-              </div>
+      {/* ══════════════════════════════════════════════════════════
+          MAIN HERO GRID (Asymmetric 2-column)
+      ══════════════════════════════════════════════════════════ */}
+      <motion.div className={styles.heroGrid} style={{ y: yMid, opacity: opacityFade }}>
 
-              <div className={styles.imageWrapper}>
-                <img
-                  src="/pic/wahyu2.jpeg"
-                  alt="Muhammad Wahyu Santoso"
-                  className={styles.profilePic}
-                />
-                <div className={styles.amberOverlay} aria-hidden="true" />
-              </div>
-            </motion.div>
-          </motion.div>
+        {/* ── Left Column: Personal Title & Bio ── */}
+        <div className={styles.textCol}>
 
-          <motion.p
-            className={styles.greeting}
-            initial={{ y: shouldReduce ? 0 : 16, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ ...entranceTransition, delay: 0.25 }}
-          >
-            Hello, I'm
-          </motion.p>
-
+          {/* Clean executive full name typography */}
           <motion.h1
-            className={styles.name}
+            className={styles.nameBlock}
             initial="hidden"
             animate="show"
             variants={staggerContainer}
-            transition={{ delayChildren: 0.35 }}
             aria-label="Muhammad Wahyu Santoso"
           >
-            {['Muhammad', 'Wahyu', 'Santoso'].map((word, i) => (
-              <motion.span
-                key={word}
-                variants={wordVariant}
-                className={i === 1 ? styles.nameAccent : undefined}
-                style={{ display: 'inline-block', marginRight: '0.28em' }}
-              >
-                {word}
-              </motion.span>
-            ))}
-            <Sparkles />
+            <motion.span className={styles.greetingText} variants={wordVariant}>
+              Hello, I'm
+            </motion.span>
+            <motion.span className={styles.fullName} variants={wordVariant}>
+              Muhammad <span className={styles.accentName}>Wahyu</span> Santoso
+            </motion.span>
           </motion.h1>
 
+          {/* Glass Role Badge Pill */}
           <motion.div
-            className={styles.roleWrapper}
-            initial={{ y: shouldReduce ? 0 : 16, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ ...entranceTransition, delay: 0.6 }}
+            className={styles.rolePillWrapper}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ ...entranceTransition, delay: 0.3 }}
           >
-            <span className={styles.rolePrefix}>I'm a </span>
-            <span className={styles.role} aria-live="polite">
-              {displayed}
-              <span className={styles.cursor} aria-hidden="true">|</span>
-            </span>
+            <div className={styles.rolePill} aria-live="polite">
+              <span className={styles.roleBracket}>&lt;</span>
+              <div className={styles.roleContent}>
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={ROLES[roleIdx]}
+                    className={styles.roleText}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  >
+                    {ROLES[roleIdx]}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
+              <span className={styles.roleBracket}>/&gt;</span>
+            </div>
           </motion.div>
 
+          <p className={styles.tagline}>
+            Engineering ultra smooth, high-impact digital experiences with modern web technologies and 3D visual design systems.
+          </p>
+
+          {/* CTAs */}
           <motion.div
             className={styles.ctas}
-            variants={fadeInUp}
-            initial="hidden"
-            animate="show"
-            transition={{ ...entranceTransition, delay: 0.75 }}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ ...entranceTransition, delay: 0.5 }}
           >
             <Button variant="gold" onClick={scrollToProjects}>
               View Projects
@@ -178,18 +154,67 @@ export const Hero: React.FC = React.memo(() => {
               Get Connected
             </Button>
           </motion.div>
+
         </div>
+
+        {/* ── Right Column: Layered Portrait ── */}
+        <div className={styles.portraitCol}>
+          <div className={styles.portraitTiltOuter}>
+            <motion.div
+              className={styles.portraitInner}
+              style={shouldReduce ? {} : { rotateX, rotateY }}
+              initial={{ scale: 0.9, opacity: 0, y: 24 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              transition={{ ...entranceTransition, delay: 0.2 }}
+            >
+              {/* Warm golden ambient glow */}
+              <motion.div
+                className={styles.timbulAmbientGlow}
+                style={{ opacity: glowOp }}
+                aria-hidden="true"
+              />
+
+              {/* 3D Rim light overlay */}
+              <div className={styles.rimLight} aria-hidden="true" />
+
+              {/* Profile Image in Glass Ambient Frame with Orbiting Particle Ring */}
+              <div className={styles.profileFrame}>
+                <div className={styles.particleRing} aria-hidden="true">
+                  {Array.from({ length: 12 }).map((_, i) => (
+                    <span
+                      key={i}
+                      className={styles.orbParticle}
+                      style={{ '--idx': i, '--total': 12 } as React.CSSProperties}
+                    />
+                  ))}
+                </div>
+
+                <div className={styles.imageWrapper}>
+                  <img
+                    src="/pic/wahyu2.jpeg"
+                    alt="Muhammad Wahyu Santoso — Frontend Developer"
+                    className={styles.timbulPic}
+                  />
+                  <div className={styles.amberOverlay} aria-hidden="true" />
+                </div>
+              </div>
+
+              {/* Base Dissolve Fade */}
+              <div className={styles.timbulBottomFade} aria-hidden="true" />
+            </motion.div>
+          </div>
+        </div>
+
       </motion.div>
 
+      {/* ── Foreground Palm Trees Layer ── */}
       <motion.div className={styles.layerFg} style={{ y: yFg, opacity: opacityFg }} aria-hidden="true">
         <CoconutTree className={`${styles.tree} ${styles.treeFgLeft}`} />
         <CoconutTree className={`${styles.tree} ${styles.treeFgRight}`} />
       </motion.div>
 
-      <motion.div
-        className={styles.scrollHintWrapper}
-        style={{ opacity: opacityFade }}
-      >
+      {/* ── Scroll Hint ── */}
+      <motion.div className={styles.scrollHintWrapper} style={{ opacity: opacityFade }}>
         <div className={styles.scrollPill} aria-label="Scroll to explore">
           <motion.div
             className={styles.scrollDot}
@@ -197,8 +222,9 @@ export const Hero: React.FC = React.memo(() => {
             transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
           />
         </div>
-        <span className={styles.scrollLabel}>Scroll to explore</span>
+        <span className={styles.scrollLabel}>SCROLL TO EXPLORE</span>
       </motion.div>
+
     </section>
   )
 })
