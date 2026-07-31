@@ -1,7 +1,18 @@
+/**
+ * BackgroundCanvas.tsx
+ *
+ * Renders the flowing wave and wind energy background shader.
+ * Acts as an immersive, slow-breathing sunset environment behind the website content.
+ *
+ * Implements "Warm Sunset Meets Deep Twilight" design system.
+ * Spec: implementation_plan.md
+ */
 import React, { useState, useCallback } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { PerformanceMonitor, Environment, ScrollControls } from '@react-three/drei'
-import { FloatingGlassShapes } from './FloatingGlassShapes'
+import { PerformanceMonitor } from '@react-three/drei'
+import { WaveShader } from './WaveShader'
+import { useMouseParallax } from '../hooks/useMouseParallax'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 import styles from './BackgroundCanvas.module.scss'
 
 interface BackgroundCanvasProps {
@@ -10,51 +21,28 @@ interface BackgroundCanvasProps {
 
 export const BackgroundCanvas: React.FC<BackgroundCanvasProps> = ({ isMobile }) => {
   const [dpr, setDpr] = useState<[number, number]>([1, 2])
+  const mouse = useMouseParallax()
+  const reducedMotion = useReducedMotion()
 
   const onDecline = useCallback(() => setDpr([0.75, 1]), [])
-  const onIncline = useCallback(() => setDpr([1, 2]),   [])
-
-  const fov = isMobile ? 55 : 50
+  const onIncline  = useCallback(() => setDpr([1, 2]),   [])
 
   return (
     <div className={styles.canvasWrapper} aria-hidden="true">
       <Canvas
         dpr={dpr}
-        camera={{ position: [0, 0, 6], fov }}
-        gl={{ antialias: true, alpha: true }}
-        style={{ background: 'transparent' }}
+        gl={{ antialias: true, alpha: false, depth: false, stencil: false }}
+        camera={{ position: [0, 0, 1] }}
+        style={{ background: '#0a0d14' }}
       >
         <PerformanceMonitor onDecline={onDecline} onIncline={onIncline} />
 
-        {}
-        <fog attach="fog" args={['#0a0d14', 8, 22]} />
-
-        {}
-        <ambientLight intensity={0.5} color="#FFF0B3" />
-
-        {}
-        <directionalLight
-          position={[6, 6, 3]}
-          intensity={1.4}
-          color="#DAA520"
+        {/* ── Wave and Wind Custom Shader ── */}
+        <WaveShader
+          isMobile={isMobile}
+          mouse={mouse}
+          reducedMotion={reducedMotion}
         />
-
-        {}
-        <pointLight position={[-5, -4, -3]} intensity={0.6} color="#1a2a6c" />
-
-        {}
-        <pointLight position={[0, 5, -5]} intensity={1.0} color="#D4AF37" />
-
-        {}
-        <pointLight position={[2, -4, 2]} intensity={0.3} color="#FF8C00" />
-
-        {}
-        <Environment preset="sunset" />
-
-        {}
-        <ScrollControls pages={0} damping={0.3}>
-          <FloatingGlassShapes isMobile={isMobile} />
-        </ScrollControls>
       </Canvas>
     </div>
   )
